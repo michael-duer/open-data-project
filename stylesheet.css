@@ -1,3 +1,7 @@
+#e60010
+#de2236
+#2b292b
+#fe1937
 *{
     border: 0;
     margin: 0;
@@ -13,19 +17,46 @@
   
   body{
     height: 100%;
+
+    background-color: white;
   }
 
-  .bar {
+  .bar2019 {
     fill: steelblue;
   }
-  .bar2 {
+  .bar2020 {
     fill: rebeccapurple;
   }
 
+  /* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+#bar-chart {
+  background-color: white;
+}
 
   .visualisation {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
+    margin-left: -3%;
   }
   .visualisation button {
       display:inline-block;
@@ -38,7 +69,7 @@
       font-family:'Roboto',sans-serif;
       font-weight:400;
       color:#FFFFFF;
-      background-color:#3369ff;
+      background-color:#e60010;
       box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);
       text-align:center;
       position:relative;
@@ -48,10 +79,15 @@
   }
 
   .bttn-box {
-    display: inline-block;
+    display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    width: 500px;
+    width: 480px;
+    height: 204px;
+    padding: 22px 10px 22px 22px;
+    margin-top: 10%;
+    background-color: rgba(191, 191, 191, 0.8);
+    border-radius: 25px;
   }
 
   .month-bttn {
@@ -59,6 +95,6 @@
   }
 
   .year-bttn button{
-    width: 465px;
+    width: 466px;
   
   }
