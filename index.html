@@ -14,27 +14,57 @@
     
 <body>
 
+    <script>
+    var january2019 = "test-month.csv";
+    var february2019 = "test2.csv";
+    var march2019 = "test2.csv";
+    var april2019 = "test2.csv";
+    var may2019 = "test2.csv";
+    var june2019 = "test2.csv";
+    var july2019 = "test2.csv";
+    var august2019 = "test2.csv";
+    var september2019 = "test2.csv";
+    var october2019 = "test2.csv";
+    var november2019 = "test2.csv";
+    var december2019 = "test2.csv";
+    var year2019 = "test2.csv";
+
+    var january2020 = "test-month2.csv";
+    var february2020 = "test.csv";
+    var march2020 = "test.csv";
+    var april2020 = "test.csv";
+    var may2020 = "test.csv";
+    var june2020 = "test.csv";
+    var july2020 = "test.csv";
+    var august2020 = "test.csv";
+    var september2020 = "test.csv";
+    var october2020 = "test.csv";
+    var november2020 = "test.csv";
+    var december2020 = "test.csv";
+    var year2020 = "test.csv";
+    </script>
+
 <div class="visualisation">
 
-    <svg width="1200" height="600"></svg>
+    <svg id="bar-chart" width="1200" height="600"></svg>
 
     <div class="bttn-box">
         <div class="month-bttn">
-            <button onclick="myFunction()">Januar</button>
-            <button onclick="myFunction()">Februar</button>
-            <button onclick="myFunction()">März</button>
-            <button onclick="myFunction()">April</button>
-            <button onclick="myFunction()">Mai</button>
-            <button onclick="myFunction()">Juni</button>
-            <button onclick="myFunction()">Juli</button>
-            <button onclick="myFunction()">August</button>
-            <button onclick="myFunction()">September</button>
-            <button onclick="myFunction()">Oktober</button>
-            <button onclick="myFunction()">November</button>
-            <button onclick="myFunction()">Dezember</button>
+            <button onclick="update(january2019,january2020)">Januar</button>
+            <button onclick="update(february2019,february2020)">Februar</button>
+            <button onclick="update(march2019,march2020)">März</button>
+            <button onclick="update(april2019,april2020)">April</button>
+            <button onclick="update(may2019,may2020)">Mai</button>
+            <button onclick="update(june2019,june2020)">Juni</button>
+            <button onclick="update(july2019,july2020)">Juli</button>
+            <button onclick="update(august2019,august2020)">August</button>
+            <button onclick="update(september2019,september2020)">September</button>
+            <button onclick="update(october2019,october2020)">Oktober</button>
+            <button onclick="update(november2019,november2020)">November</button>
+            <button onclick="update(december2019,december2020)">Dezember</button>
         </div>
         <div class="year-bttn">
-            <button onclick="myFunction()">Gesammtjahresvergleich</button>
+            <button onclick="update(year2019,year2020)">Gesammtjahresvergleich</button>
         </div>
     </div>
 </div>
@@ -51,19 +81,29 @@
        .attr("font-size", "30px")
        .text("Fahrgastzahlen")
 
-    var xScale = d3.scaleBand().range([0, width]).padding(0.4),
-        yScale = d3.scaleLinear().range([height, 0]);
-
-    var g = svg.append("g")
+       var g = svg.append("g")
                .attr("transform", "translate(" + 100 + "," + 100 + ")");
 
+    //initialize X-axis
+    var xScale = d3.scaleBand().range([0, width]).padding(0.4)
+    var xAxis = svg.append("g")
+    .attr("transform", "translate(" + 100 + "," + 100 + ")");
+
+    //initialize Y-axis
+    var yScale = d3.scaleLinear().range([height, 0]);
+    var yAxis = svg.append("g")
+        .attr("class", "myYaxis")
+    //load csv files
+
+ //   var month2020 = "test-month.csv";
+ //   var month2019 = "test-month2.csv";
 
     d3.queue()
-    .defer(d3.csv, "test-month.csv") //2020
-    .defer(d3.csv, "test-month.csv") //2019
+    .defer(d3.csv, "test.csv") //2020
+    .defer(d3.csv, "test2.csv") //2019
     .await(function(error, data2020, data2019) {
         if (error) throw error;
-
+        
         xScale.domain(data2020.map(function(d) { return d.date; }));
         yScale.domain([0, d3.max(data2020, function(d) { return d.transported_people; })]);
 
@@ -74,13 +114,7 @@
                 var delimiter = d.split(".");
                 var d1 = new Date(Number(delimiter[2]), Number(delimiter[1]) -1, Number(delimiter[0]));
                 return d3.timeFormat("%d.%m")(d1)
-            }))
-         .append("text")
-         .attr("y", height - 250)
-         .attr("x", width - 100)
-         .attr("text-anchor", "end")
-         .attr("stroke", "black")
-         .text("Date");
+            }));
 
         g.append("g")
          .call(d3.axisLeft(yScale).tickFormat(function(d){
@@ -89,37 +123,31 @@
          .ticks(10))
          //delete y-axis
          .call(g => g.select(".domain")
-         .remove())
+         .remove());
          //
-         .append("text")
-         .attr("transform", "rotate(-90)")
-         .attr("y", 6)
-         .attr("dy", "-5.1em")
-         .attr("text-anchor", "end")
-         .attr("stroke", "black")
-         .text("Transported People");
+         
 
-        g.selectAll(".bar")
-         .data(data2020)
+        g.selectAll(".bar2019")
+         .data(data2020) //change to 2019
          .enter().append("rect")
-         .attr("class", "bar")
-         .attr("x", function(d) { return xScale(d.date); }) //berechnet x werte
+         .attr("class", "bar2019")
+         .attr("x", function(d) { return xScale(d.date); })
          .attr("y", function(d) { return yScale(d.transported_people); })
          .attr("width", xScale.bandwidth())
          .attr("height", function(d) { return height - yScale(d.transported_people); });
 
-         g.selectAll(".bar2")
-         .data(data2019)
+         g.selectAll(".bar2020")
+         .data(data2019) //change to 2020
          .enter().append("rect")
-         .attr("class", "bar2")
+         .attr("class", "bar2020")
          .attr("x", function(d) { return xScale(d.date) + 10; })
          .attr("y", function(d) { return yScale(d.transported_people); })
          .attr("width", xScale.bandwidth())
          .attr("height", function(d) { return height - yScale(d.transported_people); });
 
-
+/*
          //bruchi de fr kreise und info kaste
-         g.selectAll(".bar2")
+         g.selectAll(".bar2020")
          .data(data2019)
          .enter().append("circle")
          .attr("class", "circle")
@@ -127,8 +155,149 @@
          .attr("y", function(d) { return yScale(d.transported_people); })
          .attr("width", xScale.bandwidth())
          .attr("height", function(d) { return height - yScale(d.transported_people); });
-    
+    */
+
+        //add legend
+        var VALUES = ["month2019", "month2020"]
+
+        var legend = svg.selectAll(".legend")
+            .data(VALUES)
+            .enter()
+            .append("g")
+
+            legend.append("rect")
+                .attr("fill", "#4391b5")
+                .attr("width", 20)
+                .attr("height", 20)
+                .attr("y", 25)
+                .attr("x", 600);
+            legend.append("rect")
+                .attr("fill", "#d2d2d2")
+                .attr("width", 20)
+                .attr("height", 20)
+               .attr("y", 25)
+                .attr("x", 680);
+
+            legend.append("text")
+                .attr("class", "label")
+                .attr("y", 40)
+                .attr("x", 630)
+                .attr("text-anchor", "start")
+                .text("2019");
+            legend.append("text")
+                .attr("class", "label")
+                .attr("y", 40)
+                .attr("x", 710)
+                .attr("text-anchor", "start")
+                .text("2020");
         });
+    
+        //add tooltip
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+            return "<strong>Transported people:</strong> <span style='color:black'>" + d.transported_people + "</span>";
+        svg.call(tip);
+
+        })
+
+// function to update the chart with new data
+function update(month2019, month2020) {
+    
+// Parse the Data
+d3.queue()
+    .defer(d3.csv, month2019) //2019
+    .defer(d3.csv, month2020) //2020
+    .await(function(error, data2019, data2020) {
+        if (error) throw error;   
+
+    //remove old axis ticks
+    d3.selectAll("tick").remove();
+
+  // X axis
+  xScale.domain(data2019.map(function(d) { return d.date; }))
+    xAxis
+        .attr("transform", "translate(" + 100 + "," + (height+100) + ")")
+        .transition()
+        .duration(1000)
+        .call(d3.axisBottom(xScale)
+        .tickFormat((d) => {
+                var delimiter = d.split(".");
+                var d1 = new Date(Number(delimiter[2]), Number(delimiter[1]) -1, Number(delimiter[0]));
+                return d3.timeFormat("%d.%m")(d1)
+            }));
+  // y axis
+  yScale.domain([0, d3.max(data2019, function(d) { return d.transported_people; })]);
+ //   yAxis
+ //       .transition()
+ //       .duration(1000)
+ //       .call(d3.axisLeft(yScale));
+
+        g.append("g")
+        .transition()
+        .duration(1000)
+        .call(d3.axisLeft(yScale).tickFormat(function(d){
+             return d;
+         })
+         .ticks(10))
+         //delete y-axis
+         .call(g => g.select(".domain")
+         .remove());
+
+  //delete old bars
+  g.selectAll("rect")
+        .transition()      //isches es problem dass si nid removed werde??
+        .duration(500)
+        .attr("y", 400)
+        .attr("height", 0);
+
+
+/*   g.selectAll("rect")
+        .data(month2020)
+        .exit()
+        .transition()
+        .duration(1000)
+        .attr("y", 400)
+        .attr("height", 0)
+        .remove();     
+*/
+    // update bars2019
+   g
+    .selectAll("bar2019")
+    .data(data2019)
+    .enter()
+    .append("rect")
+    .attr("class", "bar2019")
+    .attr("y", height)
+    .attr("x", function(d) { return xScale(d.date);})
+    .attr("height", 0)
+    .transition()
+    .duration(1000)
+    .attr("x", function(d) { return xScale(d.date); })
+    .attr("y", function(d) { return yScale(d.transported_people); })
+    .attr("width", xScale.bandwidth())
+    .attr("height", function(d) { return height - yScale(d.transported_people); });
+
+    // update bars2020
+    g
+    .selectAll("bar2020")
+    .data(data2020)
+    .enter()
+    .append("rect")
+    .attr("class", "bar2020")
+    .attr("y", height)
+    .attr("x", function(d) { return xScale(d.date);})
+    .attr("height", 0)
+    .transition()
+    .duration(1000)
+    .attr("x", function(d) { return xScale(d.date) + 10; })
+    .attr("y", function(d) { return yScale(d.transported_people); })
+    .attr("width", xScale.bandwidth())
+    .attr("height", function(d) { return height - yScale(d.transported_people); });
+    })
+
+}
 
 </script>
 </body>
