@@ -97,7 +97,7 @@
 
  //   var month2020 = "test-month.csv";
  //   var month2019 = "test-month2.csv";
-
+/*
     d3.queue()
     .defer(d3.csv, "test.csv") //2020
     .defer(d3.csv, "test2.csv") //2019
@@ -130,6 +130,8 @@
         g.selectAll(".bar2019")
          .data(data2020) //change to 2019
          .enter().append("rect")
+         .on("mouseover", onMouseOver)                  
+         .on("mouseout", onMouseOut)
          .attr("class", "bar2019")
          .attr("x", function(d) { return xScale(d.date); })
          .attr("y", function(d) { return yScale(d.transported_people); })
@@ -139,12 +141,14 @@
          g.selectAll(".bar2020")
          .data(data2019) //change to 2020
          .enter().append("rect")
+         .on("mouseover", onMouseOver)                  
+         .on("mouseout", onMouseOut)
          .attr("class", "bar2020")
          .attr("x", function(d) { return xScale(d.date) + 10; })
          .attr("y", function(d) { return yScale(d.transported_people); })
          .attr("width", xScale.bandwidth())
          .attr("height", function(d) { return height - yScale(d.transported_people); });
-
+*/
 /*
          //bruchi de fr kreise und info kaste
          g.selectAll(".bar2020")
@@ -190,17 +194,37 @@
                 .attr("x", 710)
                 .attr("text-anchor", "start")
                 .text("2020");
-        });
+        ;
     
-        //add tooltip
-        var tip = d3.tip()
-            .attr('class', 'd3-tip')
-            .offset([-10, 0])
-            .html(function(d) {
-            return "<strong>Transported people:</strong> <span style='color:black'>" + d.transported_people + "</span>";
-        svg.call(tip);
+//add tooltip
+var tooplTipDiv = d3.select("body").append("div")   
+    .attr("id", "myTooltip")               
+    .style("opacity", 0);
 
-        })
+// tooltip function mouse over       
+function onMouseOver(d){
+
+    var tooltipDiv = d3.select("#myTooltip"); 
+
+    tooltipDiv.transition()        
+    .duration(200)      
+    .style("opacity", 1);    
+
+    tooltipDiv.html( "Fahrgäste:" + d.transported_people)
+    .style("left", (parseFloat(xScale(d))) + "px") 
+    .style("cursor", "pointer")
+    .style("top", function(d){
+       return d3.event.pageY - this.offsetHeight - 17  + "px"
+    })
+    .style("color", "#333333");        
+}
+
+function onMouseOut(d){
+var tooltipDiv = d3.select("#myTooltip"); 
+    tooltipDiv.transition()        
+        .duration(500)      
+        .style("opacity", 0);  
+}
 
 // function to update the chart with new data
 function update(month2019, month2020) {
@@ -268,6 +292,8 @@ d3.queue()
     .data(data2019)
     .enter()
     .append("rect")
+    .on("mouseover", onMouseOver)                  
+    .on("mouseout", onMouseOut)
     .attr("class", "bar2019")
     .attr("y", height)
     .attr("x", function(d) { return xScale(d.date);})
@@ -285,6 +311,8 @@ d3.queue()
     .data(data2020)
     .enter()
     .append("rect")
+    .on("mouseover", onMouseOver)                  
+    .on("mouseout", onMouseOut)
     .attr("class", "bar2020")
     .attr("y", height)
     .attr("x", function(d) { return xScale(d.date);})
