@@ -173,7 +173,7 @@ function update(month2019, month2020) {
         .duration(1000)
         .attr("x", function(d) { return xScale(d.date); })
         .attr("y", function(d) { return yScale(d.transported_people); })
-        .attr("width", xScale.bandwidth())
+        .attr("width", xScale.bandwidth() -5)
         .attr("height", function(d) { return height - yScale(d.transported_people); });
     
         // update bars2020
@@ -192,7 +192,7 @@ function update(month2019, month2020) {
         .duration(1000)
         .attr("x", function(d) { return xScale(d.date) + 10; })
         .attr("y", function(d) { return yScale(d.transported_people); })
-        .attr("width", xScale.bandwidth())
+        .attr("width", xScale.bandwidth() -5)
         .attr("height", function(d) { return height - yScale(d.transported_people); });
         
 
@@ -253,24 +253,34 @@ function onMouseOver(d){
 
     var tooltipDiv = d3.select("#myTooltip"); 
 
+    //Get this bar's x/y values, then augment for the tooltip
+    var xPosition = parseFloat(d3.select(this).attr("x")) + (xScale.bandwidth() / 2) +55;
+	var yPosition = parseFloat(d3.select(this).attr("y")) + 40;
+
     tooltipDiv.transition()        
     .duration(200)      
     .style("opacity", 1);    
 
-    tooltipDiv.html( "Fahrgäste:" + d.transported_people)
-    .style("left", (parseFloat(xScale(d))) + "px") 
+    tooltipDiv
+    .html( "Fahrgäste: " + d.transported_people)
+    .style("left", xPosition + "px") 
     .style("cursor", "pointer")
-    .style("top", function(d){
-       return d3.event.pageY - this.offsetHeight - 17  + "px"
-    })
-    .style("color", "#333333");        
+    .style("top", yPosition + "px")
+    .style("color", "#333333");      
+    
+    d3.select(this)
+        .style("opacity", 0.5);
 }
 
 function onMouseOut(d){
 var tooltipDiv = d3.select("#myTooltip"); 
-    tooltipDiv.transition()        
-        .duration(500)      
-        .style("opacity", 0);  
+    tooltipDiv
+    .transition()        
+    .duration(500)      
+    .style("opacity", 0); 
+
+    d3.select(this)
+        .style("opacity", 1)
 }
 
 </script>
