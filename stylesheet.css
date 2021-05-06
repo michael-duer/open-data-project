@@ -21,11 +21,16 @@
     background-color: white;
   }
 
-  .bar2019 {
+  #bar2019 {
     fill: steelblue;
   }
-  .bar2020 {
+  #bar2020 {
     fill: rebeccapurple;
+  }
+
+  .text {
+    max-width: 50px;
+    overflow-wrap: break-word;
   }
 
   #myTooltip {
@@ -57,6 +62,22 @@
     top: 100%;
     left: -2px;
 }
+
+#massnahmen {
+  position: absolute;
+  text-align: left;
+  width: 80px;
+  height: 15px;
+  min-height: 15px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background-color: rgb(255, 255, 255);
+  border: 2px solid rgb(100, 161, 209);
+  color: #5E99BD;
+  border-radius: 4px 4px 4px 4px;
+  pointer-events: none;
+  padding: 8px;
+ }
 
 #bar-chart {
   background-color: white;
@@ -90,12 +111,14 @@
 
   .bttn-box {
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
     flex-direction: row;
     width: 480px;
     height: 204px;
-    padding: 22px 10px 22px 22px;
     margin-top: 10%;
+    padding: 22px 10px 22px 22px;
     background-color: rgba(191, 191, 191, 0.8);
     border-radius: 25px;
   }
@@ -106,4 +129,5 @@
 
   .year-bttn button{
     width: 466px;
+    margin-left: -11px;
   }

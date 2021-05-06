@@ -15,9 +15,9 @@
 <body>
 
     <script>
-    var january2019 = "test-month.csv";
-    var february2019 = "test2.csv";
-    var march2019 = "test2.csv";
+    var january2019 = "./data/january2019.csv";
+    var february2019 = "test-month.csv";
+    var march2019 = "./data/january2020.csv";
     var april2019 = "test2.csv";
     var may2019 = "test2.csv";
     var june2019 = "test2.csv";
@@ -27,11 +27,11 @@
     var october2019 = "test2.csv";
     var november2019 = "test2.csv";
     var december2019 = "test2.csv";
-    var year2019 = "test2.csv";
+    var year2019 = "./data/real-test.csv";
 
-    var january2020 = "test-month2.csv";
-    var february2020 = "test.csv";
-    var march2020 = "test.csv";
+    var january2020 = "./data/january2020.csv";
+    var february2020 = "test-month2.csv";
+    var march2020 = "./data/january2020.csv";
     var april2020 = "test.csv";
     var may2020 = "test.csv";
     var june2020 = "test.csv";
@@ -41,12 +41,12 @@
     var october2020 = "test.csv";
     var november2020 = "test.csv";
     var december2020 = "test.csv";
-    var year2020 = "test.csv";
+    var year2020 = "./data/real-test2.csv";
     </script>
 
 <div class="visualisation">
 
-    <svg id="bar-chart" width="1200" height="600"></svg>
+    <svg id="bar-chart" width="1200" height="700"></svg>
 
     <div class="bttn-box">
         <div class="month-bttn">
@@ -72,7 +72,7 @@
     var svg = d3.select("svg"),
         margin = 200,
         width = svg.attr("width") - margin,
-        height = svg.attr("height") - margin
+        height = svg.attr("height") - margin -100
 
     svg.append("text")
        .attr("transform", "translate(100,0)")
@@ -96,7 +96,6 @@
         .attr("class", "y axis");
 
     yAxis = d3.axisLeft(yScale);//.ticks(10); //new try to scale right
-        
     // function to update the chart with new data
 function update(month2019, month2020) {
     
@@ -104,14 +103,13 @@ function update(month2019, month2020) {
     d3.queue()
         .defer(d3.csv, month2019) //2019
         .defer(d3.csv, month2020) //2020
-        .await(function(error, data2019, data2020) {
+        .defer(d3.csv, "massnahmen.csv")
+        .await(function(error, data2019, data2020, massnahmen) {
             if (error) throw error;   
-    
-    //remove old axis ticks
-    d3.selectAll("tick").remove();
     
     // X axis
     xScale.domain(data2019.map(function(d) { return d.date; }))
+  //  xScale.domain([d3.min(data2019, function(d) { return d.date; }), d3.max(data2019, function(d) { return d.date; })]);
     
     // y axis
     yScale.domain([0, d3.max(data2019, function(d) { return d.transported_people; })]);
@@ -141,22 +139,42 @@ function update(month2019, month2020) {
         .remove());
     
       //delete old bars
-      g.selectAll("rect")
-            .transition()      //isches es problem dass si nid removed werde??
+      g.selectAll(".bar")
+            .transition()
             .duration(500)
             .attr("y", 400)
-            .attr("height", 0);
-    
-    
-    /*   g.selectAll("rect")
-            .data(month2020)
-            .exit()
-            .transition()
-            .duration(1000)
-            .attr("y", 400)
             .attr("height", 0)
-            .remove();     
-    */
+            .remove();
+
+        //delete old circle
+        g.selectAll("circle")
+            .transition()
+            .duration(500)
+            .attr("r", 0)
+            .remove();
+    
+        //delete old text
+        g.selectAll("text")
+            .remove();
+
+        //delete textbox
+        g.selectAll(".textBox")
+            .transition()
+            .duration(500)
+            .attr("y", 800)
+            .attr("height", 0)
+            .remove();
+
+        //delete old line from box to point
+        g.selectAll("line")
+            .remove();
+        
+        //delete polygon
+        g.selectAll("polygon")
+         //   .transition()
+         //   .duration(500)
+            .remove();
+    
         // update bars2019
        g
         .selectAll("bar2019")
@@ -165,7 +183,8 @@ function update(month2019, month2020) {
         .append("rect")
         .on("mouseover", onMouseOver)                  
         .on("mouseout", onMouseOut)
-        .attr("class", "bar2019")
+        .attr("class", "bar")
+        .attr("id", 'bar2019')
         .attr("y", height)
         .attr("x", function(d) { return xScale(d.date);})
         .attr("height", 0)
@@ -184,7 +203,8 @@ function update(month2019, month2020) {
         .append("rect")
         .on("mouseover", onMouseOver)                  
         .on("mouseout", onMouseOut)
-        .attr("class", "bar2020")
+        .attr("class", "bar")
+        .attr("id", 'bar2020')
         .attr("y", height)
         .attr("x", function(d) { return xScale(d.date);})
         .attr("height", 0)
@@ -196,18 +216,131 @@ function update(month2019, month2020) {
         .attr("height", function(d) { return height - yScale(d.transported_people); });
         
 
-        //bruchi de fr kreise und info kaste
-        g.selectAll(".bar2020")
-         .data(data2019)
+        //ersteut 2 kreise dr erst aus umrandig vom 2.
+   /*     g.selectAll("g")
+         .data(massnahmen)
          .enter().append("circle")
          .attr("class", "circle")
-         .attr("x", function(d) { return xScale(d.date); }) //berechnet x werte
-         .attr("y", function(d) { return yScale(d.transported_people); })
-         .attr("width", xScale.bandwidth())
-         .attr("height", function(d) { return height - yScale(d.transported_people); });
+         .attr("r", 7)
+         .attr("cx", function(d) { return xScale(d.date) + 10; })
+         .attr("cy", 400)
+         .style('fill', "#100f");
+
+         g.selectAll("g")
+         .data(massnahmen)
+         .enter().append("circle")
+         .attr("class", "circle")
+         .attr("r", 6)
+         .attr("cx", function(d) { return xScale(d.date) + 10; })
+         .attr("cy", 400)
+         .style('fill', "#ffff")
+         .style('opacity', 1);
+
+         g.append("line")//making a line for legend
+        .data(massnahmen)
+        .lower()
+        .attr("x1", function(d) { return xScale(d.date) + 10; })
+        .attr("x2", function(d) { return xScale(d.date) + 10; })
+        .attr("y1", 400)
+        .attr("y2", 450)
+        .style("stroke-dasharray","5,5")//dashed array for line
+        .style("stroke", '#100f')
+        .style( 'stroke-width', '2px');
+*/
+        //add textfield
+         g.selectAll("g")
+         .data(massnahmen)
+         .enter()
+         .append("rect")
+         .attr("class", "textBox")
+         .attr("x", function(d) { return xScale(d.date) -40; })
+         .attr("y", 450)
+         .attr("width", 100)
+         .attr("height", 100)
+         .style('fill', "#40FF00")
+         .attr('stroke', '#100f');
+
+         g.selectAll("g")
+            .data(massnahmen)
+            .enter()
+            .append('polygon')
+            .attr("points", function(d) { 
+                return ((xScale(d.date) - 10) + ', ' + 450 + ', '   //left point
+                        + (xScale(d.date) + 30) +', ' + 450+ ', '   //right point
+                        + (xScale(d.date) + 10) + ', ' + 420);      //top point
+            })
+            .style('fill', '#40FF00')
+            .style("stroke", '#100f');
+
+        //add line to cover black stroke of text box
+        g.selectAll("g")
+            .data(massnahmen)
+            .enter()
+            .append("line")
+            .attr("x1", function(d) { return xScale(d.date) - 9.5; })
+            .attr("x2", function(d) { return xScale(d.date) + 29.5; })
+            .attr("y1", 450)
+            .attr("y2", 450)
+            .style('stroke', '#40FF00')
+            .style( 'stroke-width', '2px');
+
+        //add text
+        g.selectAll("g")
+            .data(massnahmen)
+            .enter()
+            .append("text")
+            .attr("class", ".text")
+            .attr("x", function(d) { return xScale(d.date) -35; })
+            .attr("y", 475)
+            .attr("dy", ".35em")
+            .text(function(d) { return d.text; });
+
+
+/*
+         //add text boxes
+         var massnahmenText = d3.select("body").append("div")   
+            .attr("id", "massnahmen")               
+            .data(massnahmen)
+            .html(""+massnahmen.text+"")
+            .style("left", margin + 0) 
+            .style("top", 550 + "px")
+            .style("color", "#333333");
+*/
+/*
+        var xPol = d3.scaleLinear().range([0, 500]);
+	    var yPol = d3.scaleLinear().range([500, 0]);
+  
+        xPol.domain([-100, 100]);
+        yPol.domain([-100, 100]);
+        var poly =  [{"x":15, "y":-20},
+                    {"x":5,"y":-20},
+                    {"x":5,"y":-0},
+                    {"x":15,"y":-0}];
+
+        svg.selectAll("polygon")
+            .data([poly])
+            .enter().append("polygon")
+            .attr("points",function(d) { 
+                return d.map(function(d) {
+                            return [xPol(d.x),yPol(d.y)].join(",");
+                        }).join(" ");
+    });
+
+        // add the X Axis
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(xPol))
+    .attr("transform", "translate(" + 100 + "," + 500 + ")");
+
+  // add the Y Axis
+  svg.append("g")
+    .call(d3.axisLeft(yPol))
+    .attr("transform", "translate(" + 100 + "," + 100 + ")");
+    */
         })
+        
     }
-update(january2019,january2020);
+update(february2019,february2020);
 
 //add legend
 var VALUES = ["month2019", "month2020"]
@@ -254,8 +387,9 @@ function onMouseOver(d){
     var tooltipDiv = d3.select("#myTooltip"); 
 
     //Get this bar's x/y values, then augment for the tooltip
-    var xPosition = parseFloat(d3.select(this).attr("x")) + (xScale.bandwidth() / 2) +55;
-	var yPosition = parseFloat(d3.select(this).attr("y")) + 40;
+    var xPosition = parseFloat(d3.select(this).attr("x")) + (xScale.bandwidth() / 2) +116;//+55;
+	var yPosition = parseFloat(d3.select(this).attr("y"))+ 40;
+    //tooltip position varies in relation to screen size
 
     tooltipDiv.transition()        
     .duration(200)      
