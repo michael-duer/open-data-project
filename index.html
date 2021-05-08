@@ -13,14 +13,20 @@
     
     
 <body>
-
+    <!-- Background SVG not working
+    <div class="background">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+            <path fill="#de2236" fill-opacity="1" d="M0,96L60,90.7C120,85,240,75,360,64C480,53,600,43,720,58.7C840,75,960,117,1080,122.7C1200,128,1320,96,1380,80L1440,64L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+        </svg>
+    </div>
+    -->
     <script>
     var january2019 = "./data/january2019.csv";
-    var february2019 = "test-month.csv";
+    var february2019 = "./data/february2019.csv";
     var march2019 = "./data/january2020.csv";
     var april2019 = "test2.csv";
     var may2019 = "test2.csv";
-    var june2019 = "test2.csv";
+    var june2019 = "./data/january2019.csv";
     var july2019 = "test2.csv";
     var august2019 = "test2.csv";
     var september2019 = "test2.csv";
@@ -30,11 +36,11 @@
     var year2019 = "./data/real-test.csv";
 
     var january2020 = "./data/january2020.csv";
-    var february2020 = "test-month2.csv";
+    var february2020 = "./data/february2020.csv";
     var march2020 = "./data/january2020.csv";
     var april2020 = "test.csv";
     var may2020 = "test.csv";
-    var june2020 = "test.csv";
+    var june2020 = "./data/january2019.csv";
     var july2020 = "test.csv";
     var august2020 = "test.csv";
     var september2020 = "test.csv";
@@ -69,6 +75,7 @@
     </div>
 </div>
 <script>
+    
     var svg = d3.select("svg"),
         margin = 200,
         width = svg.attr("width") - margin,
@@ -86,17 +93,22 @@
 
     //initialize X-axis
     var xScale = d3.scaleBand().range([0, width]).padding(0.4)
+
     var xAxis = svg.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(" + 100 + "," + 500 + ")");
-    xAxis = d3.axisBottom(xScale); //new try
+
+    xAxis = d3.axisBottom()
+    .scale(xScale);
+
     //initialize Y-axis
     var yScale = d3.scaleLinear().range([height, 0]);
     var yAxis = svg.append("g")
         .attr("class", "y axis");
 
-    yAxis = d3.axisLeft(yScale);//.ticks(10); //new try to scale right
-    // function to update the chart with new data
+    yAxis = d3.axisLeft(yScale);
+
+// function to update the chart with new data
 function update(month2019, month2020) {
     
     // Parse the Data
@@ -107,11 +119,30 @@ function update(month2019, month2020) {
         .await(function(error, data2019, data2020, massnahmen) {
             if (error) throw error;   
     
-    // X axis
-    xScale.domain(data2019.map(function(d) { return d.date; }))
-  //  xScale.domain([d3.min(data2019, function(d) { return d.date; }), d3.max(data2019, function(d) { return d.date; })]);
-    
-    // y axis
+    //parse date from csv data
+    function parseDate(d) {
+        var delimiter = d.split(".");
+        var d1 = new Date(Number(delimiter[2]), Number(delimiter[1]) -1, Number(delimiter[0]));
+        return d3.timeFormat("%d.%m")(d1)
+        };
+    var dateFromCsv = [];
+    data2019.forEach(function(d) {
+        d.date = parseDate(d.date);
+        dateFromCsv.push(d.date);
+        d.transported_people = +d.transported_people;
+    });
+    data2020.forEach(function(d) {
+        d.date = parseDate(d.date);
+        d.transported_people = +d.transported_people;
+    });
+    massnahmen.forEach(function(d) {
+        d.date = parseDate(d.date);
+        d.text = d.text;
+    });
+
+    // set axis domains
+    xScale.domain(data2019.map(function(d) { return d.date; }));
+  
     yScale.domain([0, d3.max(data2019, function(d) { return d.transported_people; })]);
      
     //update xAxis
@@ -119,12 +150,13 @@ function update(month2019, month2020) {
         .transition()
         .duration(1000)
         .call(xAxis)
-        .call(d3.axisBottom(xScale)
-            .tickFormat((d) => {
+        .call(d3.axisBottom(xScale));
+/*            .tickFormat((d) => {
                 var delimiter = d.split(".");
                 var d1 = new Date(Number(delimiter[2]), Number(delimiter[1]) -1, Number(delimiter[0]));
                 return d3.timeFormat("%d.%m")(d1)
-            }));
+                })); */
+
     //Update yAxis
     svg.select(".y.axis")
         .attr("transform", "translate(" + 100 + "," + 100 + ")")
@@ -146,13 +178,13 @@ function update(month2019, month2020) {
             .attr("height", 0)
             .remove();
 
-        //delete old circle
-        g.selectAll("circle")
+        //delete old circle             UNUSED
+/*        g.selectAll("circle")
             .transition()
             .duration(500)
             .attr("r", 0)
             .remove();
-    
+*/    
         //delete old text
         g.selectAll("text")
             .remove();
@@ -253,10 +285,20 @@ function update(month2019, month2020) {
          .enter()
          .append("rect")
          .attr("class", "textBox")
-         .attr("x", function(d) { return xScale(d.date) -40; })
+         .attr("x", function(d) { 
+             if (dateFromCsv.includes(d.date)) {
+                return xScale(d.date) -40;
+            } else {
+                return 0;
+            }})
          .attr("y", 450)
-         .attr("width", 100)
-         .attr("height", 100)
+         .attr("width", 200)
+         .attr("height", function(d) { 
+             if (dateFromCsv.includes(d.date)) {
+                 return 100; 
+            } else {
+                return 0;
+            }})
          .style('fill', "#40FF00")
          .attr('stroke', '#100f');
 
@@ -265,10 +307,13 @@ function update(month2019, month2020) {
             .enter()
             .append('polygon')
             .attr("points", function(d) { 
+             if (dateFromCsv.includes(d.date)) {
                 return ((xScale(d.date) - 10) + ', ' + 450 + ', '   //left point
                         + (xScale(d.date) + 30) +', ' + 450+ ', '   //right point
-                        + (xScale(d.date) + 10) + ', ' + 420);      //top point
-            })
+                        + (xScale(d.date) + 10) + ', ' + 420);      //top point 
+            } else {
+                return 0 + ', ' + 0 + ', ' + 0 + ', ' + 0 + ', ' + 0 + ', ' + 0;
+            }})
             .style('fill', '#40FF00')
             .style("stroke", '#100f');
 
@@ -277,68 +322,72 @@ function update(month2019, month2020) {
             .data(massnahmen)
             .enter()
             .append("line")
-            .attr("x1", function(d) { return xScale(d.date) - 9.5; })
-            .attr("x2", function(d) { return xScale(d.date) + 29.5; })
+            .attr("x1", function(d) { 
+             if (dateFromCsv.includes(d.date)) {
+                return xScale(d.date) - 9.5; 
+            } else {
+                return 0;
+            }})
+            .attr("x2", function(d) { 
+             if (dateFromCsv.includes(d.date)) {
+                return xScale(d.date) + 29.5;
+            } else {
+                return 0;
+            }})
             .attr("y1", 450)
             .attr("y2", 450)
             .style('stroke', '#40FF00')
             .style( 'stroke-width', '2px');
 
+//add text
+g.selectAll("g")
+            .data(massnahmen)
+            .enter()
+            .append("text")
+            .attr("class", ".text")
+            .attr("class", "text")
+            .attr("x", function(d) { 
+             if (dateFromCsv.includes(d.date)) {
+                return xScale(d.date) -35;
+            } else {
+                return;
+            }})
+            .attr("y", 475)
+            .attr("dy", ".35em")
+            .text(function(d) { 
+             if (dateFromCsv.includes(d.date)) {
+                 return d.text; 
+            } else {
+                return;
+            }});
+
+
+ /* try to wrap the text
+
+    var long = 'This line should be about three to four^lines long, but because I am still^learning stuff, I cannot make it do^what I want it to do. Woe is me.'
+    var short = long.split('^');
+    console.log(short);
         //add text
         g.selectAll("g")
             .data(massnahmen)
             .enter()
             .append("text")
-            .attr("class", ".text")
+            .attr("class", "text")
             .attr("x", function(d) { return xScale(d.date) -35; })
             .attr("y", 475)
-            .attr("dy", ".35em")
-            .text(function(d) { return d.text; });
-
-
-/*
-         //add text boxes
-         var massnahmenText = d3.select("body").append("div")   
-            .attr("id", "massnahmen")               
-            .data(massnahmen)
-            .html(""+massnahmen.text+"")
-            .style("left", margin + 0) 
-            .style("top", 550 + "px")
-            .style("color", "#333333");
-*/
-/*
-        var xPol = d3.scaleLinear().range([0, 500]);
-	    var yPol = d3.scaleLinear().range([500, 0]);
-  
-        xPol.domain([-100, 100]);
-        yPol.domain([-100, 100]);
-        var poly =  [{"x":15, "y":-20},
-                    {"x":5,"y":-20},
-                    {"x":5,"y":-0},
-                    {"x":15,"y":-0}];
-
-        svg.selectAll("polygon")
-            .data([poly])
-            .enter().append("polygon")
-            .attr("points",function(d) { 
-                return d.map(function(d) {
-                            return [xPol(d.x),yPol(d.y)].join(",");
-                        }).join(" ");
-    });
-
-        // add the X Axis
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(xPol))
-    .attr("transform", "translate(" + 100 + "," + 500 + ")");
-
-  // add the Y Axis
-  svg.append("g")
-    .call(d3.axisLeft(yPol))
-    .attr("transform", "translate(" + 100 + "," + 100 + ")");
-    */
+          //  .attr("dy", ".35em")
+            .selectAll('tspan').data(short)
+            .enter().append('tspan')
+            .text(function(d) {
+                    return d;
+            })
+            .attr("textLength", 200)
+            .attr("lengthAdjust", "spacingAndGlyphs")
+            .attr('dy', '1em')
+            .attr('x', '150');
+            */
         })
-        
+
     }
 update(february2019,february2020);
 
@@ -351,13 +400,13 @@ var legend = svg.selectAll(".legend")
     .append("g")
 
     legend.append("rect")
-    .attr("fill", "#4391b5")
+    .attr("fill", "#4682b4")
     .attr("width", 20)
     .attr("height", 20)
     .attr("y", 25)
     .attr("x", 600);
     legend.append("rect")
-    .attr("fill", "#d2d2d2")
+    .attr("fill", "#663399")
     .attr("width", 20)
     .attr("height", 20)
     .attr("y", 25)
@@ -387,7 +436,7 @@ function onMouseOver(d){
     var tooltipDiv = d3.select("#myTooltip"); 
 
     //Get this bar's x/y values, then augment for the tooltip
-    var xPosition = parseFloat(d3.select(this).attr("x")) + (xScale.bandwidth() / 2) +116;//+55;
+    var xPosition = parseFloat(d3.select(this).attr("x")) + (xScale.bandwidth() / 2) +108;//+55;
 	var yPosition = parseFloat(d3.select(this).attr("y"))+ 40;
     //tooltip position varies in relation to screen size
 
