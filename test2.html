@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Home</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheet.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+      
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <!--<script src="/script.js"></script>-->
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    </head>
+<body>
+
+<div class="chart">
+    <svg id="chart" width="1200" height="700"></svg>
+</div>
+
+<script>
+    var xPos2019 = 180,
+        xPos2020 = 180,
+        yPos = 53;
+    
+    var wagonAmount2019 = 7,
+        wagonAmount2020 = 5; 
+
+d3.select("#chart")
+  .append("svg:image")
+  .attr("xlink:href", "./img/tram-wagon-min.svg")
+  .attr("class", "lastWagon2019")
+  .attr("width", 150)
+  .attr("height", 150)
+  .attr("x", yPos -25)
+  .attr("y",yPos);
+
+  d3.select("#chart")
+  .append("svg:image")
+  .attr("xlink:href", "./img/tram-wagon-min.svg")
+  .attr("id", "lastWagon2020")
+  .attr("width", 150)
+  .attr("height", 150)
+  .attr("x", yPos -25)
+  .attr("y",yPos + 150);
+
+function addWagon2019() {
+    d3.select("#chart")
+    .append("svg:image")
+    .attr("xlink:href", "./img/tram-wagon-min.svg")
+    .attr("id", "wagon")
+    .attr("width", 150)
+    .attr("height", 150)
+    .attr("x", xPos2019)
+    .attr("y",yPos);
+
+    xPos2019 = xPos2019 + 152;
+}
+
+function addWagon2020() {
+    d3.select("#chart")
+    .append("svg:image")
+    .attr("xlink:href", "./img/tram-wagon-min.svg")
+    .attr("id", "wagon")
+    .attr("width", 150)
+    .attr("height", 150)
+    .attr("x", xPos2020)
+    .attr("y",yPos + 150);
+
+    xPos2020 = xPos2020 + 152;
+}
+
+for (i = 0; i < wagonAmount2019; i++) {
+    addWagon2019();
+    i++
+}
+
+for (i = 0; i < wagonAmount2020; i++) {
+    addWagon2020();
+    i++
+}
+
+d3.select("#chart")
+  .append("svg:image")
+  .attr("xlink:href", "./img/tram-head2.svg")
+  .attr("id", "head")
+  .attr("width", 190)
+  .attr("height", 190)
+  .attr("x", xPos2019 - 7)//+ 145)
+  .attr("y",yPos -13);
+
+d3.select("#chart")
+  .append("svg:image")
+  .attr("xlink:href", "./img/tram-head2.svg")
+  .attr("id", "head")
+  .attr("width", 190)
+  .attr("height", 190)
+  .attr("x", xPos2020 - 7)//+ 145)
+  .attr("y",yPos + 140)//190);
+  
+  </script>
+
+</body>
+</html>
