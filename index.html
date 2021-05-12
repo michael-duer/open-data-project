@@ -1,18 +1,21 @@
 <!doctype html>
 <html>
-<head>
-    <title>Home</title>
-        <link rel="stylesheet" href="/stylesheet.css">
+    <head>
+        <title>Home</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheet.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
       
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <!--<script src="/script.js"></script>-->
         
-        <meta name="viewport" content="width=device-width, maximum-scale=0.5" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-    
+    </head>
 <body>
+    <div class="header">
+        <h1 id="title">Visualisierung der Fahrgastdaten von Bernmobil im Jahr 2019/2020</h1>
+    </div>
     <!-- Background SVG not working
     <div class="background">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
@@ -21,36 +24,143 @@
     </div>
     -->
     <script>
-    var january2019 = "./data/january2019.csv";
-    var february2019 = "./data/february2019.csv";
-    var march2019 = "./data/january2020.csv";
-    var april2019 = "test2.csv";
-    var may2019 = "test2.csv";
-    var june2019 = "./data/january2019.csv";
-    var july2019 = "test2.csv";
-    var august2019 = "test2.csv";
-    var september2019 = "test2.csv";
-    var october2019 = "test2.csv";
-    var november2019 = "test2.csv";
-    var december2019 = "test2.csv";
+    var january2019 = "./data/monthly-data/january2019.csv";
+    var february2019 = "./data/monthly-data/february2019.csv";
+    var march2019 = "./data/monthly-data/march2019.csv";
+    var april2019 = "./data/monthly-data/april2019.csv";
+    var may2019 = "./data/monthly-data/may2019.csv";
+    var june2019 = "./data/monthly-data/june2019.csv";
+    var july2019 = "./data/monthly-data/july2019.csv";
+    var august2019 = "./data/monthly-data/august2019.csv";
+    var september2019 = "./data/monthly-data/september2019.csv";
+    var october2019 = "./data/monthly-data/october2019.csv";
+    var november2019 = "./data/monthly-data/november2019.csv";
+    var december2019 = "./data/monthly-data/december2019.csv";
     var year2019 = "./data/real-test.csv";
 
-    var january2020 = "./data/january2020.csv";
-    var february2020 = "./data/february2020.csv";
-    var march2020 = "./data/january2020.csv";
-    var april2020 = "test.csv";
-    var may2020 = "test.csv";
-    var june2020 = "./data/january2019.csv";
-    var july2020 = "test.csv";
-    var august2020 = "test.csv";
-    var september2020 = "test.csv";
-    var october2020 = "test.csv";
-    var november2020 = "test.csv";
-    var december2020 = "test.csv";
+    var january2020 = "./data/monthly-data/january2020.csv";
+    var february2020 =  "./data/monthly-data/february2020.csv";
+    var march2020 = "./data/monthly-data/march2020.csv";
+    var april2020 = "./data/monthly-data/april2020.csv";
+    var may2020 = "./data/monthly-data/may2020.csv";
+    var june2020 = "./data/monthly-data/june2020.csv";
+    var july2020 = "./data/monthly-data/july2020.csv";
+    var august2020 = "./data/monthly-data/august2020.csv";
+    var september2020 = "./data/monthly-data/september2020.csv";
+    var october2020 = "./data/monthly-data/october2020.csv";
+    var november2020 = "./data/monthly-data/november2020.csv";
+    var december2020 = "./data/monthly-data/december2020.csv";
     var year2020 = "./data/real-test2.csv";
     </script>
 
-<div class="visualisation">
+<div class="chart">
+    <h1 id="chart-title"> Im Jahr 2020 wurden im Vergleich zum Vorjahr X% weniger Fahrten gemacht</h1>
+    <svg id="chart" width="1200" height="700"></svg>
+</div>
+
+<script>
+var xPos2019 = 180,
+        xPos2020 = 180,
+        yPos = 53;
+    
+    var wagonAmount2019 = 7,
+        wagonAmount2020 = 5; 
+//add year text
+d3.select("#chart")
+    .append("text")
+    .attr("id", "year-number")
+    .attr("y", 73)
+    .attr("x", 60)
+    .attr("text-anchor", "start")
+    .attr("fill", "#ffffff")
+    .style("font-size", "2rem")
+    .text("2019");
+
+d3.select("#chart")
+    .append("text")
+    .attr("id", "year-number")
+    .attr("y", 250)
+    .attr("x", 60)
+    .attr("text-anchor", "start")
+    .attr("fill", "#ffffff")
+    .style("font-size", "2rem")
+    .text("2020");
+//add last wagon of both years
+d3.select("#chart")
+  .append("svg:image")
+  .attr("xlink:href", "./img/tram-wagon-min.svg")
+  .attr("class", "lastWagon2019")
+  .attr("width", 150)
+  .attr("height", 150)
+  .attr("x", yPos -25)
+  .attr("y",yPos);
+
+  d3.select("#chart")
+  .append("svg:image")
+  .attr("xlink:href", "./img/tram-wagon-min.svg")
+  .attr("id", "lastWagon2020")
+  .attr("width", 150)
+  .attr("height", 150)
+  .attr("x", yPos -25)
+  .attr("y",yPos + 180);
+
+function addWagon2019() {
+    d3.select("#chart")
+    .append("svg:image")
+    .attr("xlink:href", "./img/tram-wagon-min.svg")
+    .attr("id", "wagon")
+    .attr("width", 150)
+    .attr("height", 150)
+    .attr("x", xPos2019)
+    .attr("y",yPos);
+
+    xPos2019 = xPos2019 + 152;
+}
+
+function addWagon2020() {
+    d3.select("#chart")
+    .append("svg:image")
+    .attr("xlink:href", "./img/tram-wagon-min.svg")
+    .attr("id", "wagon")
+    .attr("width", 150)
+    .attr("height", 150)
+    .attr("x", xPos2020)
+    .attr("y",yPos + 180);
+
+    xPos2020 = xPos2020 + 152;
+}
+
+for (i = 0; i < wagonAmount2019; i++) {
+    addWagon2019();
+    i++
+}
+
+for (i = 0; i < wagonAmount2020; i++) {
+    addWagon2020();
+    i++
+}
+//draw tram head
+d3.select("#chart")
+  .append("svg:image")
+  .attr("xlink:href", "./img/tram-head2.svg")
+  .attr("id", "head")
+  .attr("width", 190)
+  .attr("height", 190)
+  .attr("x", xPos2019 - 7)//+ 145)
+  .attr("y",yPos -13);
+
+d3.select("#chart")
+  .append("svg:image")
+  .attr("xlink:href", "./img/tram-head2.svg")
+  .attr("id", "head")
+  .attr("width", 190)
+  .attr("height", 190)
+  .attr("x", xPos2020 - 7)//+ 145)
+  .attr("y",yPos + 167)//190);
+  
+  </script>
+
+<div class="bar-chart">
 
     <svg id="bar-chart" width="1200" height="700"></svg>
 
@@ -76,25 +186,24 @@
 </div>
 <script>
     
-    var svg = d3.select("svg"),
+    var barChart = d3.select("#bar-chart"),
         margin = 200,
-        width = svg.attr("width") - margin,
-        height = svg.attr("height") - margin -100
+        width = barChart.attr("width") - margin,
+        height = barChart.attr("height") - margin -100
 
-    svg.append("text")
+        barChart.append("text")
        .attr("transform", "translate(100,0)")
        .attr("x", 50)
        .attr("y", 50)
        .attr("font-size", "30px")
        .text("Fahrgastzahlen")
 
-       var g = svg.append("g")
+       var g = barChart.append("g")
                .attr("transform", "translate(" + 100 + "," + 100 + ")");
 
     //initialize X-axis
     var xScale = d3.scaleBand().range([0, width]).padding(0.4)
-
-    var xAxis = svg.append("g")
+    var xAxis = barChart.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(" + 100 + "," + 500 + ")");
 
@@ -103,7 +212,7 @@
 
     //initialize Y-axis
     var yScale = d3.scaleLinear().range([height, 0]);
-    var yAxis = svg.append("g")
+    var yAxis = barChart.append("g")
         .attr("class", "y axis");
 
     yAxis = d3.axisLeft(yScale);
@@ -125,7 +234,9 @@ function update(month2019, month2020) {
         var d1 = new Date(Number(delimiter[2]), Number(delimiter[1]) -1, Number(delimiter[0]));
         return d3.timeFormat("%d.%m")(d1)
         };
+        
     var dateFromCsv = [];
+
     data2019.forEach(function(d) {
         d.date = parseDate(d.date);
         dateFromCsv.push(d.date);
@@ -141,12 +252,12 @@ function update(month2019, month2020) {
     });
 
     // set axis domains
-    xScale.domain(data2019.map(function(d) { return d.date; }));
+    xScale.domain(data2020.map(function(d) { return d.date; }));
   
     yScale.domain([0, d3.max(data2019, function(d) { return d.transported_people; })]);
      
     //update xAxis
-    svg.select(".x.axis")
+    barChart.select(".x.axis")
         .transition()
         .duration(1000)
         .call(xAxis)
@@ -158,7 +269,7 @@ function update(month2019, month2020) {
                 })); */
 
     //Update yAxis
-    svg.select(".y.axis")
+    barChart.select(".y.axis")
         .attr("transform", "translate(" + 100 + "," + 100 + ")")
         .transition()
         .duration(1000)
@@ -291,11 +402,25 @@ function update(month2019, month2020) {
             } else {
                 return 0;
             }})
+         .attr("y", 900)
+         .transition()
+         .duration(500)
          .attr("y", 450)
          .attr("width", 200)
-         .attr("height", function(d) { 
-             if (dateFromCsv.includes(d.date)) {
-                 return 100; 
+         .attr("height", function(d) {
+            if (dateFromCsv.includes(d.date)) {
+                switch(d.row){
+                    case "0":
+                        return 60;
+                        break;
+                    case "1":
+                        return 60 + 25;
+                        break;
+                    case "2":
+                        return 60 + 50;
+                        break;
+                    default:
+                        return 0; }
             } else {
                 return 0;
             }})
@@ -306,6 +431,9 @@ function update(month2019, month2020) {
             .data(massnahmen)
             .enter()
             .append('polygon')
+            .attr("points", 900 + ', ' + 900 + ', ' + 900 + ', ' + 900 + ', ' + 900 + ', ' + 900)
+            .transition()
+            .duration(500)
             .attr("points", function(d) { 
              if (dateFromCsv.includes(d.date)) {
                 return ((xScale(d.date) - 10) + ', ' + 450 + ', '   //left point
@@ -322,6 +450,12 @@ function update(month2019, month2020) {
             .data(massnahmen)
             .enter()
             .append("line")
+            .attr("x1", 900)
+            .attr("x2", 900)
+            .attr("y1", 900)
+            .attr("y2", 900)
+            .transition()
+            .duration(500)
             .attr("x1", function(d) { 
              if (dateFromCsv.includes(d.date)) {
                 return xScale(d.date) - 9.5; 
@@ -344,15 +478,31 @@ g.selectAll("g")
             .data(massnahmen)
             .enter()
             .append("text")
-            .attr("class", ".text")
             .attr("class", "text")
+            .attr("x", 900)
+            .attr("y", 900)
+            .transition()
+            .duration(500)
             .attr("x", function(d) { 
              if (dateFromCsv.includes(d.date)) {
                 return xScale(d.date) -35;
             } else {
                 return;
             }})
-            .attr("y", 475)
+            .attr("y", function(d) {
+                switch(d.row){
+                    case "0":
+                        return 475;
+                        break;
+                    case "1":
+                        return 475 + 25;
+                        break;
+                    case "2":
+                        return 475 + 50;
+                        break;
+                    default:
+                        return 475;
+            }})
             .attr("dy", ".35em")
             .text(function(d) { 
              if (dateFromCsv.includes(d.date)) {
@@ -360,32 +510,6 @@ g.selectAll("g")
             } else {
                 return;
             }});
-
-
- /* try to wrap the text
-
-    var long = 'This line should be about three to four^lines long, but because I am still^learning stuff, I cannot make it do^what I want it to do. Woe is me.'
-    var short = long.split('^');
-    console.log(short);
-        //add text
-        g.selectAll("g")
-            .data(massnahmen)
-            .enter()
-            .append("text")
-            .attr("class", "text")
-            .attr("x", function(d) { return xScale(d.date) -35; })
-            .attr("y", 475)
-          //  .attr("dy", ".35em")
-            .selectAll('tspan').data(short)
-            .enter().append('tspan')
-            .text(function(d) {
-                    return d;
-            })
-            .attr("textLength", 200)
-            .attr("lengthAdjust", "spacingAndGlyphs")
-            .attr('dy', '1em')
-            .attr('x', '150');
-            */
         })
 
     }
@@ -394,7 +518,7 @@ update(february2019,february2020);
 //add legend
 var VALUES = ["month2019", "month2020"]
 
-var legend = svg.selectAll(".legend")
+var legend = barChart.selectAll(".legend")
     .data(VALUES)
     .enter()
     .append("g")
@@ -432,11 +556,11 @@ var tooplTipDiv = d3.select("body").append("div")
 
 // tooltip function mouse over       
 function onMouseOver(d){
-
+    
     var tooltipDiv = d3.select("#myTooltip"); 
-
+    
     //Get this bar's x/y values, then augment for the tooltip
-    var xPosition = parseFloat(d3.select(this).attr("x")) + (xScale.bandwidth() / 2) +108;//+55;
+    var xPosition = parseFloat(d3.select(this).attr("x")) + (xScale.bandwidth() / 2) +107;//+55;
 	var yPosition = parseFloat(d3.select(this).attr("y"))+ 40;
     //tooltip position varies in relation to screen size
 
@@ -446,7 +570,7 @@ function onMouseOver(d){
 
     tooltipDiv
     .html( "Fahrgäste: " + d.transported_people)
-    .style("left", xPosition + "px") 
+    .style("left", xPosition + "px") //(d3.event.pageX - 48) + "px")
     .style("cursor", "pointer")
     .style("top", yPosition + "px")
     .style("color", "#333333");      
@@ -467,5 +591,12 @@ var tooltipDiv = d3.select("#myTooltip");
 }
 
 </script>
+
+<!-- Footer -->
+<div id="footer" class="footer">
+    <div class="copyright">
+      <p>Copyright 2021 Michael Dür</p> 
+    </div>
+  </div>
 </body>
 </html>
