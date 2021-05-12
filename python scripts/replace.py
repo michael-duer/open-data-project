@@ -1,8 +1,8 @@
 import csv
 
-reader = csv.reader(open("Fahrgastzahlen_2019_2020.csv", "r"), delimiter=';')
+reader = csv.reader(open("./data/Fahrgastzahlen_2019.csv", "r"), delimiter=';')
 
-writer = csv.writer(open("Fahrgastzahlen_2.csv", 'w'), delimiter=',')
+writer = csv.writer(open("./data/Fahrgastzahlen_2019-2.csv", 'w', newline=''), delimiter=',')
 writer.writerows(reader)
 
 print("Delimiter successfully changed")
