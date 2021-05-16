@@ -5,7 +5,8 @@
         <link rel="stylesheet" type="text/css" href="/stylesheet.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
-      
+        <link rel="icon" type="image/png" href="./img/tram-head2.svg">
+
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <!--<script src="/script.js"></script>-->
         
@@ -36,7 +37,7 @@
     var october2019 = "./data/monthly-data/october2019.csv";
     var november2019 = "./data/monthly-data/november2019.csv";
     var december2019 = "./data/monthly-data/december2019.csv";
-    var year2019 = "./data/real-test.csv";
+    var year2019 = "./data/biweekly2019-2.csv";
 
     var january2020 = "./data/monthly-data/january2020.csv";
     var february2020 =  "./data/monthly-data/february2020.csv";
@@ -50,12 +51,13 @@
     var october2020 = "./data/monthly-data/october2020.csv";
     var november2020 = "./data/monthly-data/november2020.csv";
     var december2020 = "./data/monthly-data/december2020.csv";
-    var year2020 = "./data/real-test2.csv";
+    var year2020 = "./data/biweekly2020.csv";
     </script>
 
+<!-- Tram chart-->
 <div class="chart">
     <h1 id="chart-title"> Im Jahr 2020 wurden im Vergleich zum Vorjahr X% weniger Fahrten gemacht</h1>
-    <svg id="chart" width="1200" height="700"></svg>
+    <svg id="chart" width="80%" height="700"></svg>
 </div>
 
 <script>
@@ -103,6 +105,9 @@ d3.select("#chart")
   .attr("height", 150)
   .attr("x", yPos -25)
   .attr("y",yPos + 180);
+//define for calculation later
+  var restPercentage = document.querySelector('#lastWagon2020');
+  restPercentage.style.setProperty('--percentage', '50%');
 
 function addWagon2019() {
     d3.select("#chart")
@@ -160,8 +165,12 @@ d3.select("#chart")
   
   </script>
 
+<!-- Barchart-->
 <div class="bar-chart">
-
+    <div class="bar-chart-title">
+        <h1>Die folgende Grafik zeigt die Anzahl transportierter Personen in Bussen und Trams
+            mit eingebauten Zähler. Somit ist dies kein Abbild der gesammt Zahlen, sondern nur ein repräsentativer Ausschnitt.</h1>
+    </div>
     <svg id="bar-chart" width="1200" height="700"></svg>
 
     <div class="bttn-box">
@@ -180,7 +189,7 @@ d3.select("#chart")
             <button onclick="update(december2019,december2020)">Dezember</button>
         </div>
         <div class="year-bttn">
-            <button onclick="update(year2019,year2020)">Gesammtjahresvergleich</button>
+            <button onclick="updateYear(year2019, year2020)">Gesammtjahresvergleich</button>
         </div>
     </div>
 </div>
@@ -189,7 +198,7 @@ d3.select("#chart")
     var barChart = d3.select("#bar-chart"),
         margin = 200,
         width = barChart.attr("width") - margin,
-        height = barChart.attr("height") - margin -100
+        height = barChart.attr("height") - margin -100;
 
         barChart.append("text")
        .attr("transform", "translate(100,0)")
@@ -262,11 +271,6 @@ function update(month2019, month2020) {
         .duration(1000)
         .call(xAxis)
         .call(d3.axisBottom(xScale));
-/*            .tickFormat((d) => {
-                var delimiter = d.split(".");
-                var d1 = new Date(Number(delimiter[2]), Number(delimiter[1]) -1, Number(delimiter[0]));
-                return d3.timeFormat("%d.%m")(d1)
-                })); */
 
     //Update yAxis
     barChart.select(".y.axis")
@@ -288,14 +292,7 @@ function update(month2019, month2020) {
             .attr("y", 400)
             .attr("height", 0)
             .remove();
-
-        //delete old circle             UNUSED
-/*        g.selectAll("circle")
-            .transition()
-            .duration(500)
-            .attr("r", 0)
-            .remove();
-*/    
+ 
         //delete old text
         g.selectAll("text")
             .remove();
@@ -328,7 +325,7 @@ function update(month2019, month2020) {
         .on("mouseout", onMouseOut)
         .attr("class", "bar")
         .attr("id", 'bar2019')
-        .attr("y", height)
+        .attr("y", height +50)
         .attr("x", function(d) { return xScale(d.date);})
         .attr("height", 0)
         .transition()
@@ -336,7 +333,7 @@ function update(month2019, month2020) {
         .attr("x", function(d) { return xScale(d.date); })
         .attr("y", function(d) { return yScale(d.transported_people); })
         .attr("width", xScale.bandwidth() -5)
-        .attr("height", function(d) { return height - yScale(d.transported_people); });
+        .attr("height", function(d) { return (height - yScale(d.transported_people)) + 50; });
     
         // update bars2020
         g
@@ -348,7 +345,7 @@ function update(month2019, month2020) {
         .on("mouseout", onMouseOut)
         .attr("class", "bar")
         .attr("id", 'bar2020')
-        .attr("y", height)
+        .attr("y", height +50)
         .attr("x", function(d) { return xScale(d.date);})
         .attr("height", 0)
         .transition()
@@ -356,40 +353,8 @@ function update(month2019, month2020) {
         .attr("x", function(d) { return xScale(d.date) + 10; })
         .attr("y", function(d) { return yScale(d.transported_people); })
         .attr("width", xScale.bandwidth() -5)
-        .attr("height", function(d) { return height - yScale(d.transported_people); });
+        .attr("height", function(d) { return (height - yScale(d.transported_people)) + 50; });
         
-
-        //ersteut 2 kreise dr erst aus umrandig vom 2.
-   /*     g.selectAll("g")
-         .data(massnahmen)
-         .enter().append("circle")
-         .attr("class", "circle")
-         .attr("r", 7)
-         .attr("cx", function(d) { return xScale(d.date) + 10; })
-         .attr("cy", 400)
-         .style('fill', "#100f");
-
-         g.selectAll("g")
-         .data(massnahmen)
-         .enter().append("circle")
-         .attr("class", "circle")
-         .attr("r", 6)
-         .attr("cx", function(d) { return xScale(d.date) + 10; })
-         .attr("cy", 400)
-         .style('fill', "#ffff")
-         .style('opacity', 1);
-
-         g.append("line")//making a line for legend
-        .data(massnahmen)
-        .lower()
-        .attr("x1", function(d) { return xScale(d.date) + 10; })
-        .attr("x2", function(d) { return xScale(d.date) + 10; })
-        .attr("y1", 400)
-        .attr("y2", 450)
-        .style("stroke-dasharray","5,5")//dashed array for line
-        .style("stroke", '#100f')
-        .style( 'stroke-width', '2px');
-*/
         //add textfield
          g.selectAll("g")
          .data(massnahmen)
@@ -424,7 +389,7 @@ function update(month2019, month2020) {
             } else {
                 return 0;
             }})
-         .style('fill', "#40FF00")
+         .style('fill', "#54BD00")
          .attr('stroke', '#100f');
 
          g.selectAll("g")
@@ -442,7 +407,7 @@ function update(month2019, month2020) {
             } else {
                 return 0 + ', ' + 0 + ', ' + 0 + ', ' + 0 + ', ' + 0 + ', ' + 0;
             }})
-            .style('fill', '#40FF00')
+            .style('fill', '#54BD00')
             .style("stroke", '#100f');
 
         //add line to cover black stroke of text box
@@ -470,11 +435,12 @@ function update(month2019, month2020) {
             }})
             .attr("y1", 450)
             .attr("y2", 450)
-            .style('stroke', '#40FF00')
+            .style('stroke', '#54BD00')
             .style( 'stroke-width', '2px');
+            
 
-//add text
-g.selectAll("g")
+        //add text
+        g.selectAll("g")
             .data(massnahmen)
             .enter()
             .append("text")
@@ -510,45 +476,9 @@ g.selectAll("g")
             } else {
                 return;
             }});
+
         })
 
-    }
-update(february2019,february2020);
-
-//add legend
-var VALUES = ["month2019", "month2020"]
-
-var legend = barChart.selectAll(".legend")
-    .data(VALUES)
-    .enter()
-    .append("g")
-
-    legend.append("rect")
-    .attr("fill", "#4682b4")
-    .attr("width", 20)
-    .attr("height", 20)
-    .attr("y", 25)
-    .attr("x", 600);
-    legend.append("rect")
-    .attr("fill", "#663399")
-    .attr("width", 20)
-    .attr("height", 20)
-    .attr("y", 25)
-    .attr("x", 680);
-
-    legend.append("text")
-    .attr("class", "label")
-    .attr("y", 40)
-    .attr("x", 630)
-    .attr("text-anchor", "start")
-    .text("2019");
-    legend.append("text")
-    .attr("class", "label")
-    .attr("y", 40)
-    .attr("x", 710)
-    .attr("text-anchor", "start")
-    .text("2020");
-    
 //add tooltip
 var tooplTipDiv = d3.select("body").append("div")   
     .attr("id", "myTooltip")               
@@ -590,12 +520,450 @@ var tooltipDiv = d3.select("#myTooltip");
         .style("opacity", 1)
 }
 
+
+    }
+update(february2019,february2020);
+
+function updateYear(month2019, month2020) {
+
+    update(month2019,month2020);
+
+    d3.csv(month2019, function(data2019) {  
+
+    //remove x axis ticks
+    d3.selectAll(".x.axis .tick line").each(function(d) {
+        this.remove();
+    });
+    d3.selectAll(".x.axis .tick").each(function(d) {
+        this.remove();
+    });
+
+    //delete old text
+    g.selectAll("text")
+            .remove();
+
+        //delete textbox
+        g.selectAll(".textBox")
+            .transition()
+            .duration(500)
+            .attr("y", 800)
+            .attr("height", 0)
+            .remove();
+
+        //delete old line from box to point
+        g.selectAll("line")
+            .remove();
+        
+        //delete polygon
+        g.selectAll("polygon")
+            .remove();
+
+    //add text with month
+    var label = ["Januar", "Februar", "März", "April", "Mai",
+                "Juni", "Juli", "August", "September", "Oktober", 
+                "November", "Dezember"]
+  var xPosLabels = [20,105,190,280,360,445,530,595,665,760,835,920]
+
+  g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 20)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-weight", 100)
+            //.style("fill", "black")
+            .text("Januar"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 105)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("Februar"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 195)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("März"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 280)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("April"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 365)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("Mai"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 445)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("Juni"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 530)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("Juli"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 595)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("August"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 665)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("September"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 760)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("Oktober"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 835)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("November"); 
+
+            g.selectAll("g")
+            .data(data2019)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("id", "monthLabel")
+            .attr("x", 920)
+            .attr("y", 415)
+            .attr("dy", ".35em")
+            //.style("font-size", "30px")
+            //.style("fill", "#100F")
+            .text("Dezember");
+    
+    //add textfield
+    g.selectAll("g")
+         .data(data2019)
+         .enter()
+         .append("rect")
+         .attr("class", "textBox")
+         .attr("x", 340)
+         .attr("y", 465)
+         .attr("width", 335)
+         .attr("height", 40)
+         .style('fill', "#54BD00")
+         .attr('stroke', '#100f');
+    //add text
+    g.selectAll("g")
+        .data(data2019)
+        .enter()
+        .append("text")
+        .attr("class", "text")
+        .attr("id", "monthLabel")
+        .attr("x", 350)
+        .attr("y", 485)
+        .attr("dy", ".35em")
+        //.style("font-size", "30px")
+        .style("stroke", "none")
+        .text("Ein Monat wird durch 2 Balken dargestellt!");
+  
+    //change tooltip
+    });
+    
+}
+
+//add legend
+var VALUES = ["month2019", "month2020"]
+
+var legend = barChart.selectAll(".legend")
+    .data(VALUES)
+    .enter()
+    .append("g")
+
+    legend.append("rect")
+    .attr("fill", "#003E71")
+    .attr("width", 20)
+    .attr("height", 20)
+    .attr("y", 25)
+    .attr("x", 600);
+    legend.append("rect")
+    .attr("fill", "#1796D2")
+    .attr("width", 20)
+    .attr("height", 20)
+    .attr("y", 25)
+    .attr("x", 680);
+
+    legend.append("text")
+    .attr("class", "label")
+    .attr("y", 40)
+    .attr("x", 630)
+    .attr("text-anchor", "start")
+    .text("2019");
+    legend.append("text")
+    .attr("class", "label")
+    .attr("y", 40)
+    .attr("x", 710)
+    .attr("text-anchor", "start")
+    .text("2020");
+
 </script>
+
+<!-- Heatmap-->
+<div id="heatmap-div">
+    <h1>Die selben Daten als Heatmap nach Wochentagen und Monaten gegliedert</h1>
+    <svg id="heatmap"></svg>
+</div>
+
+    <script>
+      var margin = { top: 50, right: 0, bottom: 100, left: 30 },
+          width = 1920 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom,
+          gridSize = Math.floor(width / 48),
+          legendElementWidth = gridSize*2,
+          buckets = 9,
+          colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
+          days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
+          months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
+
+
+        d3.queue()
+        .defer(d3.csv, "./data/heatmap2019.csv") //2019
+        .defer(d3.csv, "./data/heatmap2020.csv") //2020
+        .await(function(error, heatmap2019, heatmap2020) {
+            if (error) throw error;  
+
+        heatmap2019.forEach(function(d) {
+          return {
+            day: +d.day,
+            hour: +d.hour,
+            value: +d.value
+          };})
+
+          heatmap2020.forEach(function(d) {
+          return {
+            day: +d.day,
+            hour: +d.hour,
+            value: +d.value
+          };})
+
+          var colorScale = d3.scaleQuantile()
+              .domain([0, d3.max(heatmap2019, function (d) { return d.value; })])
+              .range(colors);
+
+          var svg = d3.select("#heatmap")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+          //add year label
+        d3.select("#heatmap")
+            .append("text")
+            .attr("id", "year-number")
+            .attr("y", 20)
+            .attr("x", 255)
+            .attr("fill", "#ffffff")
+            .style("font-size", "2rem")
+            .text("2019");
+
+        d3.select("#heatmap")
+            .append("text")
+            .attr("id", "year-number")
+            .attr("y", 20)
+            .attr("x", 1055)
+            .attr("fill", "#ffffff")
+            .style("font-size", "2rem")
+            .text("2020");
+
+          //draw heatmap 2019
+          var dayLabels = svg.selectAll(".dayLabel2019")
+              .data(days)
+              .enter().append("text")
+                .text(function (d) { return d; })
+                .attr("x", 25)
+                .attr("y", function (d, i) { return (i * gridSize) -5; })
+                .style("text-anchor", "end")
+                .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+                .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); })
+                .style("fill", "white");
+
+          var monthLabels = svg.selectAll(".monthLabel2019")
+              .data(months)
+              .enter().append("text")
+                .text(function(d) { return d; })
+                .attr("x", function(d, i) { return (i * gridSize) + 35; })
+                .attr("y", 0)
+                .style("text-anchor", "middle")
+                .attr("transform", "translate(" + gridSize / 2 + ", -6)")
+                .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); })
+                .style("fill", "white");
+
+          var heatMap = svg.selectAll(".month2019")
+              .data(heatmap2019)
+              .enter().append("rect")
+              .attr("x", function(d) { return (d.month) * gridSize; })
+              .attr("y", function(d) { return (d.day) * gridSize; })
+              .attr("rx", 4)
+              .attr("ry", 4)
+              .attr("class", "month bordered")
+              .attr("width", gridSize)
+              .attr("height", gridSize)
+              .style("fill", colors[0]);
+
+          heatMap.transition().duration(1000)
+              .style("fill", function(d) { return colorScale(d.value); });
+
+          heatMap.append("title").text(function(d) { return "Bevörderte Personen: " + d.value; });
+
+          //draw heatmap 2020
+          var dayLabels = svg.selectAll(".dayLabel2020")
+              .data(days)
+              .enter().append("text")
+                .text(function (d) { return d; })
+                .attr("x", 820)
+                .attr("y", function (d, i) { return (i * gridSize) -5; })
+                .style("text-anchor", "end")
+                .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+                .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); })
+                .style("fill", "white");
+
+          var monthLabels = svg.selectAll(".monthLabel2020")
+              .data(months)
+              .enter().append("text")
+                .text(function(d) { return d; })
+                .attr("x", function(d, i) { return (i * gridSize) + 835; })
+                .attr("y", 0)
+                .style("text-anchor", "middle")
+                .attr("transform", "translate(" + gridSize / 2 + ", -6)")
+                .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); })
+                .style("fill", "white");
+
+          var heatMap = svg.selectAll(".month2020")
+              .data(heatmap2020)
+              .enter().append("rect")
+              .attr("x", function(d) { return ((d.month) * gridSize) + 800; })
+              .attr("y", function(d) { return (d.day) * gridSize; })
+              .attr("rx", 4)
+              .attr("ry", 4)
+              .attr("class", "month bordered")
+              .attr("width", gridSize)
+              .attr("height", gridSize)
+              .style("fill", colors[0]);
+
+          heatMap.transition().duration(1000)
+              .style("fill", function(d) { return colorScale(d.value); });
+
+          heatMap.append("title").text(function(d) { return "Bevörderte Personen: " + d.value; });
+
+          var legend = svg.selectAll(".legend")
+              .data([0].concat(colorScale.quantiles()), function(d) { return d; })
+              .enter().append("g")
+              .attr("class", "legend");
+
+          legend.append("rect")
+            .attr("x", function(d, i) { return (legendElementWidth * i) + 350; })
+            .attr("y", height + 50)
+            .attr("width", legendElementWidth)
+            .attr("height", gridSize / 2)
+            .style("fill", function(d, i) { return colors[i]; });
+
+          legend.append("text")
+            .attr("class", "mono")
+            .text(function(d) { return "≥ " + Math.round(d); })
+            .attr("x", function(d, i) { return (legendElementWidth * i) + 350; })
+            .attr("y", height + gridSize + 50)
+            .style("fill", "white");
+      });
+    </script>
 
 <!-- Footer -->
 <div id="footer" class="footer">
     <div class="copyright">
       <p>Copyright 2021 Michael Dür</p> 
+    </div>
+    <div>Tram Icons erstellt von 
+        <a href="https://www.freepik.com" title="Freepik">Freepik</a> und
+        <a href="https://www.flaticon.com/de/autoren/icongeek26" title="Icongeek26">Icongeek26</a>
+        from <a href="https://www.flaticon.com/de/" title="Flaticon">www.flaticon.com</a>
     </div>
   </div>
 </body>
