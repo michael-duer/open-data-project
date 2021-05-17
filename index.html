@@ -52,6 +52,43 @@
     var november2020 = "./data/monthly-data/november2020.csv";
     var december2020 = "./data/monthly-data/december2020.csv";
     var year2020 = "./data/biweekly2020.csv";
+
+    function responsivefy(svg) {
+  // container will be the DOM element
+  // that the svg is appended to
+  // we then measure the container
+  // and find its aspect ratio
+  const container = d3.select(svg.node().parentNode),
+      width = parseInt(svg.style('width'), 10),
+      height = parseInt(svg.style('height'), 10),
+      aspect = width / height;
+ 
+  // set viewBox attribute to the initial size
+  // control scaling with preserveAspectRatio
+  // resize svg on inital page load
+  svg.attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('preserveAspectRatio', 'xMinYMid')
+      .call(resize);
+ 
+  // add listener so the chart will be resized
+  // when the window resizes
+  d3.select(window).on(
+      'resize.' + container.attr('id'), 
+      resize
+  );
+ 
+  // this is the code that resizes the chart
+  // it will be called on load
+  // and in response to window resizes
+  // gets the width of the container
+  // and resizes the svg to fill it
+  // while maintaining a consistent aspect ratio
+  function resize() {
+      const w = parseInt(container.style('width'));
+      svg.attr('width', w);
+      svg.attr('height', Math.round(w / aspect));
+  }
+}
     </script>
 
 <!-- Tram chart-->
@@ -61,6 +98,7 @@
 </div>
 
 <script>
+  //  var tramChart = d3.select("#chart").call(responsivefy);
 var xPos2019 = 180,
         xPos2020 = 180,
         yPos = 53;
@@ -169,9 +207,9 @@ d3.select("#chart")
 <div class="bar-chart">
     <div class="bar-chart-title">
         <h1>Die folgende Grafik zeigt die Anzahl transportierter Personen in Bussen und Trams
-            mit eingebauten Zähler. Somit ist dies kein Abbild der gesammt Zahlen, sondern nur ein repräsentativer Ausschnitt.</h1>
+            mit eingebautem Zähler. Somit ist dies kein Abbild der gesamt Zahlen, sondern nur ein repräsentativer Ausschnitt.</h1>
     </div>
-    <svg id="bar-chart" width="1200" height="700"></svg>
+    <svg id="bar-chart" height="700" width="1200"></svg>
 
     <div class="bttn-box">
         <div class="month-bttn">
@@ -195,8 +233,9 @@ d3.select("#chart")
 </div>
 <script>
     
-    var barChart = d3.select("#bar-chart"),
-        margin = 200,
+    var barChart = d3.select("#bar-chart");
+  //  .call(responsivefy);
+    var margin = 200,
         width = barChart.attr("width") - margin,
         height = barChart.attr("height") - margin -100;
 
@@ -325,7 +364,7 @@ function update(month2019, month2020) {
         .on("mouseout", onMouseOut)
         .attr("class", "bar")
         .attr("id", 'bar2019')
-        .attr("y", height +50)
+        .attr("y", height +200)
         .attr("x", function(d) { return xScale(d.date);})
         .attr("height", 0)
         .transition()
@@ -333,7 +372,7 @@ function update(month2019, month2020) {
         .attr("x", function(d) { return xScale(d.date); })
         .attr("y", function(d) { return yScale(d.transported_people); })
         .attr("width", xScale.bandwidth() -5)
-        .attr("height", function(d) { return (height - yScale(d.transported_people)) + 50; });
+        .attr("height", function(d) { return (height - yScale(d.transported_people)) + 200; });
     
         // update bars2020
         g
@@ -345,7 +384,7 @@ function update(month2019, month2020) {
         .on("mouseout", onMouseOut)
         .attr("class", "bar")
         .attr("id", 'bar2020')
-        .attr("y", height +50)
+        .attr("y", height +200)
         .attr("x", function(d) { return xScale(d.date);})
         .attr("height", 0)
         .transition()
@@ -353,7 +392,7 @@ function update(month2019, month2020) {
         .attr("x", function(d) { return xScale(d.date) + 10; })
         .attr("y", function(d) { return yScale(d.transported_people); })
         .attr("width", xScale.bandwidth() -5)
-        .attr("height", function(d) { return (height - yScale(d.transported_people)) + 50; });
+        .attr("height", function(d) { return (height - yScale(d.transported_people)) + 200; });
         
         //add textfield
          g.selectAll("g")
@@ -795,9 +834,9 @@ var legend = barChart.selectAll(".legend")
 
     <script>
       var margin = { top: 50, right: 0, bottom: 100, left: 30 },
-          width = 1920 - margin.left - margin.right,
-          height = 500 - margin.top - margin.bottom,
-          gridSize = Math.floor(width / 48),
+          width = 910 - margin.left - margin.right,
+          height = 350 - margin.top - margin.bottom,
+          gridSize = Math.floor(width / 48) + 5,
           legendElementWidth = gridSize*2,
           buckets = 9,
           colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
@@ -832,6 +871,7 @@ var legend = barChart.selectAll(".legend")
           var svg = d3.select("#heatmap")
               .attr("width", width + margin.left + margin.right)
               .attr("height", height + margin.top + margin.bottom)
+              .call(responsivefy)
               .append("g")
               .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -839,8 +879,8 @@ var legend = barChart.selectAll(".legend")
         d3.select("#heatmap")
             .append("text")
             .attr("id", "year-number")
-            .attr("y", 20)
-            .attr("x", 255)
+            .attr("y", 22)
+            .attr("x", 170)
             .attr("fill", "#ffffff")
             .style("font-size", "2rem")
             .text("2019");
@@ -848,8 +888,8 @@ var legend = barChart.selectAll(".legend")
         d3.select("#heatmap")
             .append("text")
             .attr("id", "year-number")
-            .attr("y", 20)
-            .attr("x", 1055)
+            .attr("y", 22)
+            .attr("x", 700)
             .attr("fill", "#ffffff")
             .style("font-size", "2rem")
             .text("2020");
@@ -860,7 +900,7 @@ var legend = barChart.selectAll(".legend")
               .enter().append("text")
                 .text(function (d) { return d; })
                 .attr("x", 25)
-                .attr("y", function (d, i) { return (i * gridSize) -5; })
+                .attr("y", function (d, i) { return (i * gridSize) + 5; })
                 .style("text-anchor", "end")
                 .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
                 .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); })
@@ -880,11 +920,12 @@ var legend = barChart.selectAll(".legend")
           var heatMap = svg.selectAll(".month2019")
               .data(heatmap2019)
               .enter().append("rect")
-              .attr("x", function(d) { return (d.month) * gridSize; })
-              .attr("y", function(d) { return (d.day) * gridSize; })
+              .attr("x", function(d) { return ((d.month) * gridSize) + 15; })
+              .attr("y", function(d) { return ((d.day) * gridSize) +5; })
               .attr("rx", 4)
               .attr("ry", 4)
               .attr("class", "month bordered")
+              .attr("id", "heatmap2019")
               .attr("width", gridSize)
               .attr("height", gridSize)
               .style("fill", colors[0]);
@@ -899,8 +940,8 @@ var legend = barChart.selectAll(".legend")
               .data(days)
               .enter().append("text")
                 .text(function (d) { return d; })
-                .attr("x", 820)
-                .attr("y", function (d, i) { return (i * gridSize) -5; })
+                .attr("x", 545)
+                .attr("y", function (d, i) { return (i * gridSize) + 5; })
                 .style("text-anchor", "end")
                 .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
                 .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); })
@@ -910,7 +951,7 @@ var legend = barChart.selectAll(".legend")
               .data(months)
               .enter().append("text")
                 .text(function(d) { return d; })
-                .attr("x", function(d, i) { return (i * gridSize) + 835; })
+                .attr("x", function(d, i) { return (i * gridSize) + 560; })
                 .attr("y", 0)
                 .style("text-anchor", "middle")
                 .attr("transform", "translate(" + gridSize / 2 + ", -6)")
@@ -920,8 +961,8 @@ var legend = barChart.selectAll(".legend")
           var heatMap = svg.selectAll(".month2020")
               .data(heatmap2020)
               .enter().append("rect")
-              .attr("x", function(d) { return ((d.month) * gridSize) + 800; })
-              .attr("y", function(d) { return (d.day) * gridSize; })
+              .attr("x", function(d) { return ((d.month) * gridSize) + 540; })
+              .attr("y", function(d) { return ((d.day) * gridSize) + 5; })
               .attr("rx", 4)
               .attr("ry", 4)
               .attr("class", "month bordered")
@@ -940,17 +981,17 @@ var legend = barChart.selectAll(".legend")
               .attr("class", "legend");
 
           legend.append("rect")
-            .attr("x", function(d, i) { return (legendElementWidth * i) + 350; })
-            .attr("y", height + 50)
+            .attr("x", function(d, i) { return (legendElementWidth * i) + 230; })
+            .attr("y", height + 0)
             .attr("width", legendElementWidth)
             .attr("height", gridSize / 2)
             .style("fill", function(d, i) { return colors[i]; });
 
           legend.append("text")
             .attr("class", "mono")
-            .text(function(d) { return "≥ " + Math.round(d); })
-            .attr("x", function(d, i) { return (legendElementWidth * i) + 350; })
-            .attr("y", height + gridSize + 50)
+            .text(function(d) { return "≥" + Math.round(d); })
+            .attr("x", function(d, i) { return (legendElementWidth * i) + 232; })
+            .attr("y", height + gridSize + 0)
             .style("fill", "white");
       });
     </script>
