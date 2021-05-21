@@ -1,7 +1,55 @@
 date,text,row
-07.01.2019,Maskenpflicht,0
-07.01.2019,Maskenpflicht aufgehoben,1
-15.01.2019,Maskenpflicht22,0
-15.01.2019,Maskenpflicht444,1
-15.01.2019,Maskenpflicht666,2
-15.02.2019,Maskenpflicht Februar,0
+25.02.2020,1. bestätigter Fall,0
+25.02.2020,in der Schweiz,1
+28.02.2020,Veranstaltungen mit max,0
+28.02.2020,1000 Personen erlaubt,1
+05.03.2020,Erster Todesfall,0
+05.03.2020,im Kanton Waadt,1
+13.03.2020,- Veranstaltungen mit max 100 Personen,0
+13.03.2020,"- Restaurant, Bars, Disco max 50 Personen",1
+13.03.2020,- Kein Präsenzunterricht bis 4.4.,2
+13.03.2020,- BAG empfiehlt ÖV zu meiden,3
+16.03.2020,- Bundesrat erklärt die,0
+16.03.2020,«ausserordentliche Lage»,1
+16.03.2020,- Verbot von privaten und,2
+16.03.2020,öffentlichen Veranstaltungen,3
+16.03.2020,"- Schliessung von Kultur-,",4
+16.03.2020,Gastro- und Einkaufsläden,5
+20.03.2020,- Ansammlungen mit max 5 Personen,0
+20.03.2020,- Bundesrat fordert auf zu Hause zu bleiben,1
+27.04.2020,- Öffnung Betriebe mit personenbezogenen,0
+27.04.2020,Dienstleistungen mit Körperkontakt,1
+27.04.2020,"- Öffnung Bau- und Gartenfachmärkte,",2
+27.04.2020,einschliesslich Gärtnereien und Blumenläden,3
+11.05.2020,- Wiederaufnahme Präsenzunterricht in den obligatorischen Schulen,0
+11.05.2020,und übrigen Ausbildungsstätten in Gruppen von maximal 5 Personen,1
+11.05.2020,- Öffnung Einkaufsläden und Märkte,2
+11.05.2020,"- Öffnung Museen, Bibliotheken und Archive (ohne Lesesäle)",3
+11.05.2020,- Lockerung bei Sport- und Restaurantbetrieben,4
+06.06.2020,- Treffen im öffentlichen Raum von maximal 30 Personen,0
+06.06.2020,- Öffnung verschiedener Freizeitbetriebe,1
+06.06.2020,- Veranstaltungen bis maximal 300 Personen,2
+06.06.2020,- Präsenzunterricht wieder möglich,3
+22.06.2020,- Veranstaltungen von max 1000 Personen erlaubt,0
+22.06.2020,- Aufhebung Verbot von Treffen von mehr als 30,1
+22.06.2020,Personen im öffentlichen Raum,2
+06.07.2020,Maskenpflicht im öffentlichen Verkehr,0
+01.10.2020,Grossveranstaltungen über,0
+01.10.2020,1000 Personen erlaubt,1
+19.10.2020,- Spontanen Menschenansammlungen,0
+19.10.2020,mit max 15 Personen,1
+19.10.2020,- Maskenpflicht in öffentlich,2
+19.10.2020,zugänglichen Innenräumen,3
+29.10.2020,- Freizeitaktivitäten mit max 15 Teilnehmenden,0
+29.10.2020,- Private Veranstaltungen mit max 10 Teilnehmenden,1
+29.10.2020,- Öffentliche Veranstaltungen mit max 50 Teilnehmenden,2
+29.10.2020,- Sperrstunde für Restaurant und Bars,3
+29.10.2020,- Maskenpflicht in Aussenbereichen von öffentlich,4
+29.10.2020,zugänglichen Einrichtungen,5
+02.11.2020,Präsenzveranstaltungen an Hochschulen werden verboten,0
+12.12.2020,- Verbot von Veranstaltungen (mit Ausnahmen),0
+12.12.2020,- Eingeschränkte Öffnungszeiten für:,1
+12.12.2020,"öffentliche Betriebe, Einrichtungen und",2
+12.12.2020,Gastrobetriebe (mit Ausnahmen),3
+22.12.2020,- Schliessung von Restaurants und Bars,0
+22.12.2020,"- Kultur-, Unterhaltungs- und Freizeitbetriebe geschlossen",1
