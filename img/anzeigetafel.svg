@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="1100" height="1100" xmlns="http://www.w3.org/2000/svg">
+  <g id="Layer_1">
+    <title>Layer 1</title>
+    <rect id="svg_2" height="72" width="586" y="284" x="386" stroke="#000" style="fill: rgb(183, 189, 203);"/>
+    <rect id="svg_3" height="351" width="55.553" y="356" x="914.447" stroke="#000" style="fill: rgb(183, 189, 203); paint-order: stroke markers;"/>
+    <rect id="svg_4" height="440" width="768.536" y="364" x="145" stroke="#000" style="fill: rgb(204, 214, 224);"/>
+    <rect id="svg_5" height="323" width="767.354" y="421" x="145" stroke="#000" style="fill: rgb(36, 45, 62);"/>
+    <rect id="svg_1" height="806" width="108" y="250" x="970" opacity="NaN" stroke="#000" style="fill: rgb(183, 189, 203);"/>
+    <rect id="svg_6" height="211" width="743.173" y="504" x="157" stroke="#000" style=""/>
+    <text id="svg_9" style="fill: rgb(255, 255, 255); font-size: 20px; stroke: rgb(255, 255, 255); stroke-width: 0px; white-space: pre;" x="176" y="498">Linie</text>
+    <text id="svg_10" style="fill: rgb(255, 255, 255); font-size: 20px; paint-order: fill; stroke: rgb(255, 184, 184); stroke-width: 0px; white-space: pre;" x="268" y="497">Ziel</text>
+    <text id="svg_11" style="fill: rgb(255, 255, 255); font-size: 20px; stroke: rgb(0, 0, 0); stroke-width: 0px; white-space: pre;" x="777" y="497">Abfahrt</text>
+    <line stroke-width="2" id="svg_12" y2="503" x2="173" y1="477" x1="173" fill="none" style="stroke: rgb(255, 255, 255);"/>
+    <line stroke-width="2" id="svg_13" y2="503" x2="265" y1="476" x1="265" fill="none" style="stroke: rgb(255, 255, 255);"/>
+    <line stroke-width="2" id="svg_14" y2="503" x2="774" y1="477" x1="774" fill="none" style="stroke: rgb(255, 255, 255);"/>
+  </g>
+</svg>
