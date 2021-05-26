@@ -61,7 +61,7 @@
     margin-bottom: 200px;
   }
 
-  #title {
+  #title, #subtitle{
     text-align: center;
     font-size: 5rem;
     color: #ffffff;
@@ -73,6 +73,13 @@
     max-width: 80%;
     overflow-wrap: break-word;
   } 
+
+  #subtitle {
+    margin-top: 42rem;
+    font-size: 4rem;
+    left: 10%;
+    right: 10%;
+  }
 
   .background {
 
@@ -247,7 +254,9 @@
       position:relative;
   }
   .bar-chart button:active{
-    opacity: 0.8;
+    box-shadow: 0 3px 0 ,0px 3px 6px rgba(0, 0, 0, .7);
+    position: relative;
+    top: 2px;
   }
   .bar-chart button:hover{
     box-shadow: 0 0px 10px black;
@@ -327,6 +336,84 @@
 
   text.axis-worktime {
     fill: #000;
+  }
+  /* Cards */
+  #cards-container {
+    display: flex;
+    flex-direction: row;
+
+    margin: 10rem 10% 10rem 10%;
+    padding: 10px;
+  }
+  .card {
+    display: flex;
+    flex-direction: row;
+    width: 25%;
+    margin: 0rem auto 5rem auto;
+  }
+  .bestDay, .worstDay, .dayAverage, .totalPassenger {
+    color: black;
+
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    
+    margin: 0rem 1rem 0rem 1rem;
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 1);
+    border-color: #000;
+    border-width: 0.2rem;
+    border-style: outset;
+    box-shadow: 0 0 5px black;
+    border-radius:1rem;
+  }
+  
+  .card p{
+    text-align: center;
+    font-size: 2rem;
+    line-height: 1.4;
+  }
+  .card-icon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3rem;
+    width: 50%;
+  }
+  .card-title {
+    background-color: #081d58;
+    color: white;
+  }
+  /*
+  .bestDay>.card-title {
+    background-color: #081d58;
+    color: white;
+  }
+  .worstDay>.card-title {
+    background-color: #081d58;
+    color: white;
+  }
+  .dayAverage>.card-title {
+    background-color: #081d58;
+    color: white;
+  }
+  .totalPassenger>.card-title {
+    background-color: #081d58;
+    color: white;
+  }*/
+  .card h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .card-year {
+    background-color: white;
+    color: black;
+    text-decoration: underline;
+  }
+  .bestDay:hover, .worstDay:hover, .dayAverage:hover, .totalPassenger:hover {
+    box-shadow: 0 15px 25px 0 #000;
   }
 
 

@@ -15,7 +15,9 @@
     </head>
 <body>
     <div class="header">
-        <h1 id="title">Visualisierung der Fahrgastdaten von Bernmobil im Jahr 2019/2020</h1>
+        <h1 id="title">Visualisierung der Fahrgastdaten von Bernmobil in den Jahren 2019/2020</h1> 
+        
+        <h2 id="subtitle">In Korrelation mit den Covid-19 Massnahmen</h2>
     </div>
     <!-- Background SVG not working
     <div class="background">
@@ -98,7 +100,7 @@
 
 <!-- Tram chart-->
 <div class="chart-container">
-    <h1 id="chart-title"> Im Jahr 2020 wurden im Vergleich zum Vorjahr X% weniger Fahrten gemacht</h1>
+    <h1 id="chart-title"> Im Pandemiejahr 2020 wurden im Vergleich zum Vorjahr X% weniger Fahrten gemacht</h1>
     <svg id="chart" width="80%" height="700"></svg>
 </div>
 
@@ -220,11 +222,12 @@ tramChart
 <div class="bar-chart">
     <div class="bar-chart-title">
         <h1>Die folgende Grafik zeigt die Anzahl transportierter Personen in Bussen und Trams
-            mit eingebautem Zähler. Somit ist dies kein Abbild der gesamt Zahlen, sondern nur ein repräsentativer Ausschnitt.</h1>
+            mit eingebautem Zähler. Somit ist dies kein Abbild der Gesamtzahlen, sondern ein vergleichbarer Ausschnitt.</h1>
     </div>
     <div class="bar-chart-container">
         <div class="svg-container">
             <svg id="bar-chart"></svg>
+            <p>Quelle: BERNMOBIL & Bundesamt für Gesundheit</p>
         </div>
 
         <div class="bttn-box">
@@ -243,7 +246,7 @@ tramChart
                 <button onclick="update(december2019,december2020)">Dezember</button>
             </div>
             <div class="year-bttn">
-                <button onclick="updateYear(year2019, year2020)">Gesammtjahresvergleich</button>
+                <button onclick="updateYear(year2019, year2020)">Gesamtjahresvergleich</button>
             </div>
         </div>
     </div>
@@ -267,7 +270,7 @@ tramChart
        .attr("transform", "translate(100,0)")
        .attr("x", 50)
        .attr("y", 50)
-       .attr("font-size", "30px")
+       .attr("font-size", "2.2rem")
        .text("Fahrgastzahlen")
 
        var g = barChart.append("g")
@@ -334,7 +337,7 @@ function update(month2019, month2020) {
         .duration(1000)
         .call(xAxis)
         .call(d3.axisBottom(xScale))
-        .style("font-size","1rem");
+        .style("font-size","1.1rem");
 
     //Update yAxis
     barChart.select(".y.axis")
@@ -1114,7 +1117,7 @@ var legend = barChart.selectAll(".legend")
           width = 910 - margin.left - margin.right,
           height = 350 - margin.top - margin.bottom,
           gridSize = Math.floor(width / 48) + 5,
-          legendElementWidth = gridSize*2,
+          legendElementWidth = gridSize*3,
           buckets = 9,
           colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
           days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
@@ -1219,7 +1222,7 @@ var legend = barChart.selectAll(".legend")
               .data(days)
               .enter().append("text")
                 .text(function (d) { return d; })
-                .attr("x", 550)
+                .attr("x", 540)
                 .attr("y", function (d, i) { return (i * gridSize) + 5; })
                 .style("text-anchor", "end")
                 .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
@@ -1230,7 +1233,7 @@ var legend = barChart.selectAll(".legend")
               .data(months)
               .enter().append("text")
                 .text(function(d) { return d; })
-                .attr("x", function(d, i) { return (i * gridSize) + 560; })
+                .attr("x", function(d, i) { return (i * gridSize) + 550; })
                 .attr("y", 0)
                 .style("text-anchor", "middle")
                 .attr("transform", "translate(" + gridSize / 2 + ", -6)")
@@ -1240,7 +1243,7 @@ var legend = barChart.selectAll(".legend")
           var heatMap = svg.selectAll(".month2020")
               .data(heatmap2020)
               .enter().append("rect")
-              .attr("x", function(d) { return ((d.month) * gridSize) + 540; })
+              .attr("x", function(d) { return ((d.month) * gridSize) + 530; })
               .attr("y", function(d) { return ((d.day) * gridSize) + 5; })
               .attr("rx", 4)
               .attr("ry", 4)
@@ -1254,26 +1257,79 @@ var legend = barChart.selectAll(".legend")
 
           heatMap.append("title").text(function(d) { return "Bevörderte Personen: " + d.value; });
 
+          //draw legend
           var legend = svg.selectAll(".legend")
               .data([0].concat(colorScale.quantiles()), function(d) { return d; })
               .enter().append("g")
               .attr("class", "legend");
 
           legend.append("rect")
-            .attr("x", function(d, i) { return (legendElementWidth * i) + 230; })
-            .attr("y", height + 0)
+            .attr("x", function(d, i) { return (legendElementWidth * i) + 130; })
+            .attr("y", height + 20)
             .attr("width", legendElementWidth)
             .attr("height", gridSize / 2)
             .style("fill", function(d, i) { return colors[i]; });
 
           legend.append("text")
             .attr("class", "mono")
-            .text(function(d) { return "≥" + Math.round(d); })
-            .attr("x", function(d, i) { return (legendElementWidth * i) + 232; })
-            .attr("y", height + gridSize + 0)
+            .text(function(d) { return "≥ " + Math.round(d); })
+            .attr("x", function(d, i) { return (legendElementWidth * i) + 132; })
+            .attr("y", height + gridSize + 20)
             .style("fill", "#000");
       });
     </script>
+
+<div id="cards-container">
+    <div class="card">
+        <div class="bestDay">
+            <h1 class="card-title">Bester Tag</h1>
+            <h1 class="card-year">2019</h1>
+            <p>19. September:</p>
+            <p>223'636 Personen</p>
+
+            <h1 class="card-year">2020</h1>
+            <p>14. Januar:</p>
+            <p>110'648 Personen</p>
+            <img src="./img/increase.svg" class="card-icon" alt="increasing graph" style="width: 10rem; margin-bottom: 2rem;">
+        </div>
+    </div>
+    <div class="card">
+        <div class="worstDay">
+            <h1 class="card-title">Schlechtester Tag</h1>
+            <h1 class="card-year">2019</h1>
+            <p>16. Juni:</p>
+            <p>17'430 Personen</p>
+
+            <h1 class="card-year">2020</h1>
+            <p>10. April:</p>
+            <p>2'796 Personen</p>
+            <img src="./img/decrease.svg" class="card-icon" alt="decreasing graph" style="width: 10rem; margin-bottom: 2rem;">
+        </div>
+    </div>
+    <div class="card">
+        <div class="dayAverage">
+            <h1 class="card-title">Durchschnitt</h1>
+            <h1 class="card-year">2019</h1>
+            <p>95'261 Fahrgäste pro Tag</p>
+
+            <h1 class="card-year">2020</h1>
+            <p>50'957 Fahrgäste pro Tag</p>
+            <img src="./img/group.svg" class="card-icon" alt="decreasing graph" style="width: 15rem;">
+        </div>
+    </div>
+    <div class="card">
+        <div class="totalPassenger">
+            <h1 class="card-title">Fahrgäste Total</h1>
+            <h1 class="card-year">2019</h1>
+            <p>34'770'168 Personen</p>
+
+            <h1 class="card-year">2020</h1>
+            <p>18'650'133 Personen</p>
+            <p>(-53.6%)</p>
+            <img src="./img/population.svg" class="card-icon" alt="decreasing graph" style="width: 15rem; margin-bottom: 2rem;">
+        </div>
+    </div>
+</div>
 
 <!-- Footer -->
 <div id="footer" class="footer">
