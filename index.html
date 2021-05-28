@@ -227,26 +227,28 @@ tramChart
     <div class="bar-chart-container">
         <div class="svg-container">
             <svg id="bar-chart"></svg>
-            <p>Quelle: BERNMOBIL & Bundesamt für Gesundheit</p>
+            <p id="source">Quelle: BERNMOBIL & Bundesamt für Gesundheit</p>
         </div>
-
-        <div class="bttn-box">
-            <div class="month-bttn">
-                <button onclick="update(january2019,january2020)">Januar</button>
-                <button onclick="update(february2019,february2020)">Februar</button>
-                <button onclick="update(march2019,march2020)">März</button>
-                <button onclick="update(april2019,april2020)">April</button>
-                <button onclick="update(may2019,may2020)">Mai</button>
-                <button onclick="update(june2019,june2020)">Juni</button>
-                <button onclick="update(july2019,july2020)">Juli</button>
-                <button onclick="update(august2019,august2020)">August</button>
-                <button onclick="update(september2019,september2020)">September</button>
-                <button onclick="update(october2019,october2020)">Oktober</button>
-                <button onclick="update(november2019,november2020)">November</button>
-                <button onclick="update(december2019,december2020)">Dezember</button>
-            </div>
-            <div class="year-bttn">
-                <button onclick="updateYear(year2019, year2020)">Gesamtjahresvergleich</button>
+    <div class="bttn-container">
+        <h1 id="instruction">Wählen Sie einen Zeitraum</h1>
+            <div class="bttn-box">
+                <div class="month-bttn">
+                    <button onclick="update(january2019,january2020, 'Januar', false)">Januar</button>
+                    <button onclick="update(february2019,february2020, 'Februar', false)">Februar</button>
+                    <button onclick="update(march2019,march2020, 'März', false)">März</button>
+                    <button onclick="update(april2019,april2020, 'April', false)">April</button>
+                    <button onclick="update(may2019,may2020, 'Mai', false)">Mai</button>
+                    <button onclick="update(june2019,june2020, 'Juni', false)">Juni</button>
+                    <button onclick="update(july2019,july2020, 'Juli', false)">Juli</button>
+                    <button onclick="update(august2019,august2020, 'August', false)">August</button>
+                    <button onclick="update(september2019,september2020, 'September', false)">September</button>
+                    <button onclick="update(october2019,october2020, 'Oktober', false)">Oktober</button>
+                    <button onclick="update(november2019,november2020, 'November', false)">November</button>
+                    <button onclick="update(december2019,december2020, 'Dezember', false)">Dezember</button>
+                </div>
+                <div class="year-bttn">
+                    <button onclick="updateYear(year2019, year2020, 'über das Ganze Jahr', true)">Gesamtjahresvergleich</button>
+                </div>
             </div>
         </div>
     </div>
@@ -266,13 +268,6 @@ tramChart
      //   width = barChart.attr("width") - margin,
       //  height = barChart.attr("height") - margin -100;
 
-        barChart.append("text")
-       .attr("transform", "translate(100,0)")
-       .attr("x", 50)
-       .attr("y", 50)
-       .attr("font-size", "2.2rem")
-       .text("Fahrgastzahlen")
-
        var g = barChart.append("g")
                .attr("transform", "translate(" + 100 + "," + 100 + ")");
 
@@ -291,9 +286,14 @@ tramChart
         .attr("class", "y axis");
 
     yAxis = d3.axisLeft(yScale);
+    //add tooltip
+    var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+    //add variable to change tooltip text accordingly
+    var showBiweeklyData = false;
 
 // function to update the chart with new data
-function update(month2019, month2020) {
+function update(month2019, month2020, monthString, showBiweeklyData) {
     
     // Parse the Data
     d3.queue()
@@ -344,15 +344,20 @@ function update(month2019, month2020) {
         .attr("transform", "translate(" + 100 + "," + 100 + ")")
         .transition()
         .duration(1000)
+        .call(g => g.select(".domain")
+            .style("opacity", 0))
         .call(d3.axisLeft(yScale).tickFormat(function(d){
             return d;
         })
         .ticks(10))
-        .style("font-size","1rem")
+        .style("font-size","1rem");
         //delete y-axis
-        .call(g => g.select(".domain")
-        .remove());
-    
+        
+
+    //delete old title
+    barChart.selectAll("#barChartTitle")
+        .remove();
+
       //delete old bars
       g.selectAll(".bar")
             .transition()
@@ -382,18 +387,50 @@ function update(month2019, month2020) {
          //   .transition()
          //   .duration(500)
             .remove();
-    
+
+        //add charty title
+        barChart.append("text")
+        .attr("id", 'barChartTitle')
+        .attr("transform", "translate(100,0)")
+        .attr("x", 50)
+        .attr("y", 50)
+        .attr("font-size", "2.2rem")
+        .text("Fahrgastzahlen" + " " + monthString)
         // update bars2019
        g
         .selectAll("bar2019")
         .data(data2019)
         .enter()
         .append("rect")
-        .on("mouseover", onMouseOver)                  
-        .on("mouseout", onMouseOut)
+        /*
+        .on("mouseover", function(d){
+            tooltip
+              .style("left", d3.event.pageX - 50 + "px")
+              .style("top", d3.event.pageY - 70 + "px")
+              .style("display", "inline-block")
+              .html((d.date) + ".2019" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people));
+        })
+    	.on("mouseout", function(d){ tooltip.style("display", "none");})
+        
+       */
+        .on("mouseover", function(d){
+            tooltip
+              .style("left", d3.event.pageX - 50 + "px")
+              .style("top", d3.event.pageY - 70 + "px")
+              .style("display", "inline-block")
+              .html(function(e){
+                if(showBiweeklyData == true) {
+                    return "2019" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people);
+                } else {
+                    return (d.date) + ".2019" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people);
+                }
+                })
+            })
+    	.on("mouseout", function(d){ tooltip.style("display", "none");})
+        
         .attr("class", "bar")
         .attr("id", 'bar2019')
-        .attr("y", height +300)
+        .attr("y", height +350)
         .attr("x", function(d) { return xScale(d.date);})
         .attr("height", 0)
         .transition()
@@ -401,7 +438,7 @@ function update(month2019, month2020) {
         .attr("x", function(d) { return xScale(d.date); })
         .attr("y", function(d) { return yScale(d.transported_people); })
         .attr("width", xScale.bandwidth() -5)
-        .attr("height", function(d) { return (height - yScale(d.transported_people)) + 300; });
+        .attr("height", function(d) { return (height - yScale(d.transported_people)) + 350; });
     
         // update bars2020
         g
@@ -409,11 +446,35 @@ function update(month2019, month2020) {
         .data(data2020)
         .enter()
         .append("rect")
-        .on("mouseover", onMouseOver)                  
-        .on("mouseout", onMouseOut)
+        /*
+        .on("mouseover", function(d){
+            tooltip
+              .style("left", d3.event.pageX - 50 + "px")
+              .style("top", d3.event.pageY - 70 + "px")
+              .style("display", "inline-block")
+              .html((d.date) + ".2020" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people));
+        })
+    	.on("mouseout", function(d){ tooltip.style("display", "none");})
+        */
+        .on("mouseover", function(d){
+            tooltip
+              .style("left", d3.event.pageX - 50 + "px")
+              .style("top", d3.event.pageY - 70 + "px")
+              .style("display", "inline-block")
+              .html(function(e){
+                if(showBiweeklyData) {
+                    console.log(showBiweeklyData)
+                    return "2020" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people);
+                } else {
+                    return (d.date) + ".2020" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people);
+                }
+                })
+            })
+    	.on("mouseout", function(d){ tooltip.style("display", "none");})
+        
         .attr("class", "bar")
         .attr("id", 'bar2020')
-        .attr("y", height +300)
+        .attr("y", height +350)
         .attr("x", function(d) { return xScale(d.date);})
         .attr("height", 0)
         .transition()
@@ -421,7 +482,7 @@ function update(month2019, month2020) {
         .attr("x", function(d) { return xScale(d.date) + 10; })
         .attr("y", function(d) { return yScale(d.transported_people); })
         .attr("width", xScale.bandwidth() -5)
-        .attr("height", function(d) { return (height - yScale(d.transported_people)) + 300; });
+        .attr("height", function(d) { return (height - yScale(d.transported_people)) + 350; });
 
         //add textfield
          g.selectAll("g")
@@ -740,56 +801,15 @@ function update(month2019, month2020) {
         
     })
 
-//add tooltip
-var tooplTipDiv = d3.select("body").append("div")   
-    .attr("id", "myTooltip")               
-    .style("opacity", 0);
-
-// tooltip function mouse over       
-function onMouseOver(d){
-    
-    var tooltipDiv = d3.select("#myTooltip"); 
-    
-    //Get this bar's x/y values, then augment for the tooltip
-    var xPosition = parseFloat(d3.select(this).attr("x")) + (xScale.bandwidth() / 2) +107;//+55;
-	var yPosition = parseFloat(d3.select(this).attr("y"))+ 40;
-    //tooltip position varies in relation to screen size
-
-    tooltipDiv.transition()        
-    .duration(200)      
-    .style("opacity", 1);    
-
-    tooltipDiv
-    .html( "Fahrgäste: " + d.transported_people)
-    .style("left", xPosition + "px") //(d3.event.pageX - 48) + "px")
-    .style("cursor", "pointer")
-    .style("top", yPosition + "px")
-    .style("color", "#333333");      
-    
-    d3.select(this)
-        .style("opacity", 0.5);
-}
-
-function onMouseOut(d){
-var tooltipDiv = d3.select("#myTooltip"); 
-    tooltipDiv
-    .transition()        
-    .duration(500)      
-    .style("opacity", 0); 
-
-    d3.select(this)
-        .style("opacity", 1)
-}
-
-
     }
-update(january2019,january2020);
+update(january2019,january2020, "Januar", false);
 
 
-function updateYear(month2019, month2020) {
-
-    update(month2019,month2020);
-
+function updateYear(month2019, month2020, monthString, showBiweeklyData) {
+    
+    
+    update(month2019,month2020, monthString, showBiweeklyData);
+  
     d3.csv(month2019, function(data2019) {  
 
     //remove x axis ticks
@@ -1060,10 +1080,10 @@ function updateYear(month2019, month2020) {
         .attr("y", 585)
         .attr("dy", ".35em")
         .style("font-size", "1.7rem")
-        .style("stroke", "none")
         .text("Ein Balken repräsentiert die Summe der Daten eines halben Monats (ca 2 Wochen)");
   
     //change tooltip
+    
     });
     
 }
@@ -1081,25 +1101,25 @@ var legend = barChart.selectAll(".legend")
     .attr("width", 30)
     .attr("height", 30)
     .attr("y", 25)
-    .attr("x", 600);
+    .attr("x", 700);
     legend.append("rect")
     .attr("fill", "#1796D2")
     .attr("width", 30)
     .attr("height", 30)
     .attr("y", 25)
-    .attr("x", 700);
+    .attr("x", 800);
 
     legend.append("text")
     .attr("class", "label")
     .attr("y", 45)
-    .attr("x", 635)
+    .attr("x", 735)
     .attr("text-anchor", "start")
     .style("font-size","1.7rem")
     .text("2019");
     legend.append("text")
     .attr("class", "label")
     .attr("y", 45)
-    .attr("x", 735)
+    .attr("x", 835)
     .attr("text-anchor", "start")
     .style("font-size","1.7rem")
     .text("2020");
@@ -1113,7 +1133,7 @@ var legend = barChart.selectAll(".legend")
 </div>
 
     <script>
-      var margin = { top: 50, right: 0, bottom: 100, left: 30 },
+      var margin = { top: 100, right: 0, bottom: 100, left: 30 },
           width = 910 - margin.left - margin.right,
           height = 350 - margin.top - margin.bottom,
           gridSize = Math.floor(width / 48) + 5,
@@ -1158,8 +1178,9 @@ var legend = barChart.selectAll(".legend")
         //add year label
         d3.select("#heatmap")
             .append("text")
+            .attr("class", "text")
             .attr("id", "year-label")
-            .attr("y", 22)
+            .attr("y", 62)
             .attr("x", 170)
             .attr("fill", "#000E")
             .style("font-size", "2rem")
@@ -1168,8 +1189,9 @@ var legend = barChart.selectAll(".legend")
 
         d3.select("#heatmap")
             .append("text")
+            .attr("class", "text")
             .attr("id", "year-label")
-            .attr("y", 22)
+            .attr("y", 62)
             .attr("x", 700)
             .attr("fill", "#000")
             .style("font-size", "2rem")
@@ -1179,6 +1201,7 @@ var legend = barChart.selectAll(".legend")
           //draw heatmap 2019
           var dayLabels = svg.selectAll(".dayLabel2019")
               .data(days)
+              .attr("class", "text")
               .enter().append("text")
                 .text(function (d) { return d; })
                 .attr("x", 25)
@@ -1190,6 +1213,7 @@ var legend = barChart.selectAll(".legend")
 
           var monthLabels = svg.selectAll(".monthLabel2019")
               .data(months)
+              .attr("class", "text")
               .enter().append("text")
                 .text(function(d) { return d; })
                 .attr("x", function(d, i) { return (i * gridSize) + 35; })
@@ -1221,6 +1245,7 @@ var legend = barChart.selectAll(".legend")
           var dayLabels = svg.selectAll(".dayLabel2020")
               .data(days)
               .enter().append("text")
+              .attr("class", "text")
                 .text(function (d) { return d; })
                 .attr("x", 540)
                 .attr("y", function (d, i) { return (i * gridSize) + 5; })
@@ -1232,6 +1257,7 @@ var legend = barChart.selectAll(".legend")
           var monthLabels = svg.selectAll(".monthLabel2020")
               .data(months)
               .enter().append("text")
+                .attr("class", "text")
                 .text(function(d) { return d; })
                 .attr("x", function(d, i) { return (i * gridSize) + 550; })
                 .attr("y", 0)
@@ -1265,7 +1291,7 @@ var legend = barChart.selectAll(".legend")
 
           legend.append("rect")
             .attr("x", function(d, i) { return (legendElementWidth * i) + 130; })
-            .attr("y", height + 20)
+            .attr("y", height + 50)
             .attr("width", legendElementWidth)
             .attr("height", gridSize / 2)
             .style("fill", function(d, i) { return colors[i]; });
@@ -1274,7 +1300,7 @@ var legend = barChart.selectAll(".legend")
             .attr("class", "mono")
             .text(function(d) { return "≥ " + Math.round(d); })
             .attr("x", function(d, i) { return (legendElementWidth * i) + 132; })
-            .attr("y", height + gridSize + 20)
+            .attr("y", height + gridSize + 50)
             .style("fill", "#000");
       });
     </script>
@@ -1290,7 +1316,7 @@ var legend = barChart.selectAll(".legend")
             <h1 class="card-year">2020</h1>
             <p>14. Januar:</p>
             <p>110'648 Personen</p>
-            <img src="./img/increase.svg" class="card-icon" alt="increasing graph" style="width: 10rem; margin-bottom: 2rem;">
+            <img src="./img/increase.svg" class="card-icon" alt="increasing graph" style="width: 10rem; margin-top: 6rem;">
         </div>
     </div>
     <div class="card">
@@ -1303,7 +1329,7 @@ var legend = barChart.selectAll(".legend")
             <h1 class="card-year">2020</h1>
             <p>10. April:</p>
             <p>2'796 Personen</p>
-            <img src="./img/decrease.svg" class="card-icon" alt="decreasing graph" style="width: 10rem; margin-bottom: 2rem;">
+            <img src="./img/decrease.svg" class="card-icon" alt="decreasing graph" style="width: 10rem; margin-top: 6rem;">
         </div>
     </div>
     <div class="card">
@@ -1314,7 +1340,7 @@ var legend = barChart.selectAll(".legend")
 
             <h1 class="card-year">2020</h1>
             <p>50'957 Fahrgäste pro Tag</p>
-            <img src="./img/group.svg" class="card-icon" alt="decreasing graph" style="width: 15rem;">
+            <img src="./img/group.svg" class="card-icon" alt="decreasing graph" style="width: 15rem; margin-top: 10rem;">
         </div>
     </div>
     <div class="card">
@@ -1326,7 +1352,7 @@ var legend = barChart.selectAll(".legend")
             <h1 class="card-year">2020</h1>
             <p>18'650'133 Personen</p>
             <p>(-53.6%)</p>
-            <img src="./img/population.svg" class="card-icon" alt="decreasing graph" style="width: 15rem; margin-bottom: 2rem;">
+            <img src="./img/population.svg" class="card-icon" alt="decreasing graph" style="width: 15rem; margin-top: 4rem;">
         </div>
     </div>
 </div>
@@ -1341,9 +1367,13 @@ var legend = barChart.selectAll(".legend")
     <div>
         <p>Diese Visualisierung entstand 2021 im Rahmen der Open Data-Veranstaltung an der Universität Bern. </p>
     </div>
-    <div>Tram Icons erstellt von 
+    <div class="credits"> <p>Tram Icons erstellt von</p>
         <a href="https://www.freepik.com" title="Freepik">Freepik</a> und
-        <a href="https://www.flaticon.com/de/autoren/icongeek26" title="Icongeek26">Icongeek26</a>
+        <a href="https://www.flaticon.com/de/autoren/icongeek26" title="Icongeek26">Icongeek26</a> <br>
+        <p>Sonstige Icons</p>
+        <a href="https://www.flaticon.com/authors/photo3idea-studio" title="photo3idea_studio">photo3idea_studio</a>
+        <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a>
+        <a href="https://www.freepik.com" title="Freepik">Freepik</a> <br>
         from <a href="https://www.flaticon.com/de/" title="Flaticon">www.flaticon.com</a>
     </div>
     <div>

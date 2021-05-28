@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600;700&family=Roboto+Condensed:wght@300;400;700&display=swap');
 #e60010
 #de2236
 #2b292b
@@ -29,7 +30,7 @@
     height: 100%;
     width: 100%;
   
-    font-family: Open-sans, sans-serif;
+    font-family: Roboto Condensed, sans-serif;
     font-size: 14px;
   }
   
@@ -155,7 +156,7 @@
 
  .bar-chart-container {
     display: flex;
-    width: 90%;
+    width: 100%;
     margin: 0 10% 0 10%;
     padding: 10px;
     background-color: white;
@@ -168,13 +169,18 @@
 
  .svg-container {
     flex: 4 0 0;
-    max-width: calc(70%);
+    max-width: calc(75%);
+    height: 100%;
    /* margin-left: 100px; */
  }
 
  .svg-container svg {
   background-color: rgba(255, 255, 255, 1);
 /* box-shadow: 0 5px 10px black; */
+ }
+
+ .y.axis>.domain {
+   opacity: 0;
  }
   #bar2019 {
     fill: #003E71;
@@ -183,55 +189,41 @@
     fill: #1796D2;
   }
 
-  .text {
+ .text {
     font-size: 1.3em;
+    font-family: Open Sans 600, sans-serif;
     fill: black;
     width: 100px;
     max-width: 100px;
     display: block;
   }
 
-  #myTooltip {
-    position: absolute;
-    text-align: left;
-    width: 100px;
-    height: 15px;
-    min-height: 15px;
-    padding: 2px;
-    font: 12px sans-serif;
-    background-color: rgb(255, 255, 255);
-    border: 2px solid rgb(100, 161, 209);
-    color: #5E99BD;
-    border-radius: 8px 8px 8px 8px;
-    pointer-events: none;
-    padding: 8px;
-   }
-
-   #myTooltip:before {
-    box-sizing: border-box;
-    display: inline;
-    font-size: 18px;
-    width: 100%;
-    line-height: 1;
-    color: rgb(100, 161, 209);
-    content: "\25BC";
-    position: absolute;
-    text-align: center;
-    top: 100%;
-    left: -2px;
+.toolTip {
+  position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  border: 2px solid #6F257F;
+  border-radius: 8px 8px 8px 8px;
+  padding: 14px;
+  text-align: center;
 }
 
+#source {
+  bottom: 0;
+}
  /* Buttons for bar chart*/
  .bar-chart {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-left: -3%;
     padding-top: 100px;
   }
 
   #monthLabel {
-    font-size: 1.2rem;
+    font-weight: 100;
+    font-size: 1.2rem; 
   }
 
 /*  .bar-chart svg {
@@ -239,7 +231,7 @@
   } */
   .bar-chart button {
       display:inline-block;
-      width: 120px;
+      width: 110px;
       padding:0.7em 1.7em;
       margin:0 0.3em 0.3em 0;
       border-radius:0.2em;
@@ -261,20 +253,39 @@
   .bar-chart button:hover{
     box-shadow: 0 0px 10px black;
   }
+  .bttn-container {
+    display: flex;
+    flex-direction: column;
+    
+  }
+
+  #instruction {
+    margin-top: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    text-shadow:
+      -2px -2px 0 #000,  
+      2px -2px 0 #000,
+      -2px 2px 0 #000,
+      2px 2px 0 #000;
+  }
 
   .bttn-box {
     display: flex;
     flex: 1 0 0;
-    max-width: 25%;
+    max-width: 100%;
 
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     flex-direction: row;
-    width: 450px;
-    height: 204px;
-    margin: 200px 0px 100px 0px;
-    padding: 27px 0px 210px 22px;
+    max-width: 400px;
+    max-height: 250px;
+    margin: 50px 0px 600px 5%;
+    padding: 27px 0px 25px 22px;
     background-color: #A4ABBD;
     box-shadow: 0 5px 10px black;
     border-radius: 25px;
@@ -285,8 +296,8 @@
   }
 
   .year-bttn button{
-    width: 376px;
-    margin-left: -14px;
+    width: 346px;
+    margin-left: -29px;
   }
 
   /*Heatmap*/
@@ -294,6 +305,7 @@
     margin: 20rem 10% 10rem 10%;
 
     padding: 10px;
+    padding-top: 2rem;
     background-color: white;
     border-color: #000;
     border-width: 0.2rem;
@@ -306,10 +318,8 @@
     font-size: 3rem;
     color: #ffffff;
     text-shadow: 0 0 5px black;
-    position: absolute;
-    display: flex;
-    align-content: center;
-    justify-content: center;
+   
+    text-align: center;
     margin-top: -110px;
 }
 
@@ -318,7 +328,6 @@
     align-content: center;
     justify-content: center;
   }
-
   rect.bordered {
     stroke: #E6E6E6;
     stroke-width:2px;   
@@ -326,7 +335,7 @@
 
   text.mono {
     font-size: 9pt;
-    font-family: Consolas, courier;
+    font-family: Open Sans 600, sans-serif;
     fill: #aaa;
   }
 
@@ -337,6 +346,7 @@
   text.axis-worktime {
     fill: #000;
   }
+
   /* Cards */
   #cards-container {
     display: flex;
@@ -355,7 +365,6 @@
     color: black;
 
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
     
     margin: 0rem 1rem 0rem 1rem;
@@ -384,6 +393,7 @@
   .card-title {
     background-color: #081d58;
     color: white;
+    margin-bottom: 5%;
   }
   /*
   .bestDay>.card-title {
@@ -444,6 +454,9 @@
     margin-top: 10px;
     display: flex;
     justify-content: center;
+    text-align: center;
+  }
+  .credits {
     text-align: center;
   }
   
