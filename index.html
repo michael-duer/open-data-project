@@ -1,14 +1,13 @@
 <!doctype html>
 <html>
     <head>
-        <title>Home</title>
+        <title>Fahrgastdaten Bernmobil von 2019 und 2020</title>
         <link rel="stylesheet" type="text/css" href="/stylesheet.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
-        <link rel="icon" type="image/png" href="./img/tram-head2.svg">
+        <link rel="icon" type="image/png" href="./img/tram-head.svg">
 
         <script src="https://d3js.org/d3.v4.min.js"></script>
-        <!--<script src="/script.js"></script>-->
         
         <meta name="viewport" content="width=device-width, initial-scale=1" />
     
@@ -19,13 +18,7 @@
         
         <h2 id="subtitle">In Korrelation mit den Covid-19 Massnahmen</h2>
     </div>
-    <!-- Background SVG not working
-    <div class="background">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-            <path fill="#de2236" fill-opacity="1" d="M0,96L60,90.7C120,85,240,75,360,64C480,53,600,43,720,58.7C840,75,960,117,1080,122.7C1200,128,1320,96,1380,80L1440,64L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-        </svg>
-    </div>
-    -->
+    
     <script>
     var january2019 = "./data/monthly-data/january2019.csv";
     var february2019 = "./data/monthly-data/february2019.csv";
@@ -68,12 +61,7 @@
   // set viewBox attribute to the initial size
   // control scaling with preserveAspectRatio
   // resize svg on inital page load
-  svg.attr('viewBox', function(d) {
-      if (svg.node().id == "bar-chart") {
-        return `0 0 ${width} ${height}` //-50
-      } else {
-        return `0 0 ${width} ${height}`}
-    })
+  svg.attr('viewBox', `0 0 ${width} ${height}`)
       .attr('preserveAspectRatio', 'xMinYMid')
       .call(resize);
  
@@ -99,16 +87,16 @@
     </script>
 
 <!-- Tram chart-->
-<div class="chart-container">
-    <h1 id="chart-title"> Im Pandemiejahr 2020 wurden im Vergleich zum Vorjahr X% weniger Fahrten gemacht</h1>
-    <svg id="chart" width="80%" height="700"></svg>
+<div class="tram-chart-container">
+    <h1 id="tram-chart-title"> Im Pandemiejahr 2020 wurden im Vergleich zum Vorjahr X% weniger Fahrten gemacht</h1>
+    <svg id="tram-chart" width="80%" height="20%"></svg>
 </div>
 
 <script>
-var tramChart = d3.select("#chart").call(responsivefy);
+var tramChart = d3.select("#tram-chart").call(responsivefy);
 var xPos2019 = 180,
-        xPos2020 = 180,
-        yPos = 53;
+    xPos2020 = 180,
+    yPos = 53;
     
     var wagonAmount2019 = 7,
         wagonAmount2020 = 5; 
@@ -129,13 +117,13 @@ tramChart
     .attr("y", 250)
     .attr("x", 60)
     .attr("text-anchor", "start")
-    .attr("fill", "#4e4e4e")
+    .attr("fill", "#000")
     .style("font-size", "2rem")
     .text("2020");
-//add last wagon of both years
+//add last wagon of 2019
 tramChart
   .append("svg:image")
-  .attr("xlink:href", "./img/tram-wagon-min.svg")
+  .attr("xlink:href", "./img/tram-wagon.svg")
   .attr("class", "lastWagon2019")
   .attr("width", 150)
   .attr("height", 150)
@@ -147,10 +135,10 @@ var percentageCutOff = 10,
 //take wagon width / 100 * the percentage amount + const to lineup with other wagon2019 
 scaleLeft = ((150/100) * percentageCutOff) + 20;
 
-
+//add last wagon of 2020
 tramChart
   .append("svg:image")
-  .attr("xlink:href", "./img/tram-wagon-min.svg")
+  .attr("xlink:href", "./img/tram-wagon.svg")
   .attr("id", "lastWagon2020")
   .attr("width", 150)
   .attr("height", 150)
@@ -165,7 +153,7 @@ tramChart
 function addWagon2019() {
     tramChart
     .append("svg:image")
-    .attr("xlink:href", "./img/tram-wagon-min.svg")
+    .attr("xlink:href", "./img/tram-wagon.svg")
     .attr("id", "wagon")
     .attr("width", 150)
     .attr("height", 150)
@@ -178,7 +166,7 @@ function addWagon2019() {
 function addWagon2020() {
     tramChart
     .append("svg:image")
-    .attr("xlink:href", "./img/tram-wagon-min.svg")
+    .attr("xlink:href", "./img/tram-wagon.svg")
     .attr("id", "wagon")
     .attr("width", 150)
     .attr("height", 150)
@@ -190,17 +178,17 @@ function addWagon2020() {
 
 for (i = 0; i < wagonAmount2019; i++) {
     addWagon2019();
-    i++
+    i++;
 }
 
 for (i = 0; i < wagonAmount2020; i++) {
     addWagon2020();
-    i++
+    i++;
 }
 //draw tram head
 tramChart
   .append("svg:image")
-  .attr("xlink:href", "./img/tram-head2.svg")
+  .attr("xlink:href", "./img/tram-head.svg")
   .attr("id", "head")
   .attr("width", 190)
   .attr("height", 190)
@@ -209,7 +197,7 @@ tramChart
 
 tramChart
   .append("svg:image")
-  .attr("xlink:href", "./img/tram-head2.svg")
+  .attr("xlink:href", "./img/tram-head.svg")
   .attr("id", "head")
   .attr("width", 190)
   .attr("height", 190)
@@ -229,32 +217,32 @@ tramChart
             <svg id="bar-chart"></svg>
             <p id="source">Quelle: BERNMOBIL & Bundesamt für Gesundheit</p>
         </div>
-    <div class="bttn-container">
-        <h1 id="instruction">Wählen Sie einen Zeitraum</h1>
-            <div class="bttn-box">
-                <div class="month-bttn">
-                    <button onclick="update(january2019,january2020, 'Januar', false)">Januar</button>
-                    <button onclick="update(february2019,february2020, 'Februar', false)">Februar</button>
-                    <button onclick="update(march2019,march2020, 'März', false)">März</button>
-                    <button onclick="update(april2019,april2020, 'April', false)">April</button>
-                    <button onclick="update(may2019,may2020, 'Mai', false)">Mai</button>
-                    <button onclick="update(june2019,june2020, 'Juni', false)">Juni</button>
-                    <button onclick="update(july2019,july2020, 'Juli', false)">Juli</button>
-                    <button onclick="update(august2019,august2020, 'August', false)">August</button>
-                    <button onclick="update(september2019,september2020, 'September', false)">September</button>
-                    <button onclick="update(october2019,october2020, 'Oktober', false)">Oktober</button>
-                    <button onclick="update(november2019,november2020, 'November', false)">November</button>
-                    <button onclick="update(december2019,december2020, 'Dezember', false)">Dezember</button>
+        <div class="bttn-container">
+            <h1 id="instruction">Wählen Sie einen Zeitraum aus</h1>
+                <div class="bttn-box">
+                    <div class="month-bttn">
+                        <button class="button" onclick="update(january2019,january2020, 'Januar', false)">Januar</button>
+                        <button class="button" onclick="update(february2019,february2020, 'Februar', false)">Februar</button>
+                        <button class="button" onclick="update(march2019,march2020, 'März', false)">März</button>
+                        <button class="button" onclick="update(april2019,april2020, 'April', false)">April</button>
+                        <button class="button" onclick="update(may2019,may2020, 'Mai', false)">Mai</button>
+                        <button class="button" onclick="update(june2019,june2020, 'Juni', false)">Juni</button>
+                        <button class="button" onclick="update(july2019,july2020, 'Juli', false)">Juli</button>
+                        <button class="button" onclick="update(august2019,august2020, 'August', false)">August</button>
+                        <button class="button" onclick="update(september2019,september2020, 'September', false)">September</button>
+                        <button class="button" onclick="update(october2019,october2020, 'Oktober', false)">Oktober</button>
+                        <button class="button" onclick="update(november2019,november2020, 'November', false)">November</button>
+                        <button class="button" onclick="update(december2019,december2020, 'Dezember', false)">Dezember</button>
+                    
+                        <div class="year-bttn">
+                            <button class="button" onclick="updateYear(year2019, year2020, 'über das Ganze Jahr', true)">Gesamtjahresvergleich</button>
+                        </div>
+                    </div> 
                 </div>
-                <div class="year-bttn">
-                    <button onclick="updateYear(year2019, year2020, 'über das Ganze Jahr', true)">Gesamtjahresvergleich</button>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 <script>
-    //margin andersch berechne so wi heatmap
     var margin = { top: 200, right: 100, bottom: 200, left: 100 },
           width = 1600 - margin.left - margin.right,
           height = 900 - margin.top - margin.bottom;
@@ -263,10 +251,6 @@ tramChart
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .call(responsivefy);
-
-    //var margin = 200,
-     //   width = barChart.attr("width") - margin,
-      //  height = barChart.attr("height") - margin -100;
 
        var g = barChart.append("g")
                .attr("transform", "translate(" + 100 + "," + 100 + ")");
@@ -277,8 +261,7 @@ tramChart
     .attr("class", "x axis")
     .attr("transform", "translate(" + 100 + "," + 600 + ")");
 
-    xAxis = d3.axisBottom()
-    .scale(xScale);
+    xAxis = d3.axisBottom().scale(xScale);
 
     //initialize Y-axis
     var yScale = d3.scaleLinear().range([height, 0]);
@@ -286,11 +269,15 @@ tramChart
         .attr("class", "y axis");
 
     yAxis = d3.axisLeft(yScale);
+
     //add tooltip
     var tooltip = d3.select("body").append("div").attr("class", "toolTip");
 
-    //add variable to change tooltip text accordingly
+    //variable to change tooltip text if biweekly data is shown
     var showBiweeklyData = false;
+
+    //format number with a comma "10,000"
+    const formater =  d3.format(",d");
 
 // function to update the chart with new data
 function update(month2019, month2020, monthString, showBiweeklyData) {
@@ -299,15 +286,15 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
     d3.queue()
         .defer(d3.csv, month2019) //2019
         .defer(d3.csv, month2020) //2020
-        .defer(d3.csv, "massnahmen.csv")
+        .defer(d3.csv, "./data/massnahmen.csv")
         .await(function(error, data2019, data2020, massnahmen) {
             if (error) throw error;   
     
     //parse date from csv data
     function parseDate(d) {
         var delimiter = d.split(".");
-        var d1 = new Date(Number(delimiter[2]), Number(delimiter[1]) -1, Number(delimiter[0]));
-        return d3.timeFormat("%d.%m")(d1)
+        var formatDate = new Date(Number(delimiter[2]), Number(delimiter[1]) -1, Number(delimiter[0]));
+        return d3.timeFormat("%d.%m")(formatDate)
         };
         
     var dateFromCsv = [];
@@ -345,89 +332,72 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
         .transition()
         .duration(1000)
         .call(g => g.select(".domain")
-            .style("opacity", 0))
+            .style("opacity", 0)) //set opacity of y-axis line to 0
         .call(d3.axisLeft(yScale).tickFormat(function(d){
             return d;
         })
         .ticks(10))
-        .style("font-size","1rem");
-        //delete y-axis
-        
+        .style("font-size","1.1rem");
 
     //delete old title
     barChart.selectAll("#barChartTitle")
         .remove();
 
-      //delete old bars
-      g.selectAll(".bar")
-            .transition()
-            .duration(500)
-            .attr("y", 500)
-            .attr("height", 0)
-            .remove();
+    //delete old bars
+    g.selectAll(".bar")
+        .transition()
+        .duration(500)
+        .attr("y", 500)
+        .attr("height", 0)
+        .remove();
  
-        //delete old text
-        g.selectAll("text")
-            .remove();
+    //delete old text
+    g.selectAll("text")
+        .remove();
 
-        //delete textbox
-        g.selectAll(".textBox")
-            .transition()
-            .duration(500)
-            .attr("y", 800)
-            .attr("height", 0)
-            .remove();
+    //delete textbox
+    g.selectAll(".textBox")
+        .transition()
+        .duration(500)
+        .attr("y", 800)
+        .attr("height", 0)
+        .remove();
 
-        //delete old line from box to point
-        g.selectAll("line")
-            .remove();
+    //delete old line from textbox
+    g.selectAll("line")
+        .remove();
         
-        //delete polygon
-        g.selectAll("polygon")
-         //   .transition()
-         //   .duration(500)
-            .remove();
+    //delete polygon
+    g.selectAll("polygon")
+        .remove();
 
-        //add charty title
-        barChart.append("text")
+    //add chart title
+    barChart.append("text")
         .attr("id", 'barChartTitle')
         .attr("transform", "translate(100,0)")
         .attr("x", 50)
         .attr("y", 50)
         .attr("font-size", "2.2rem")
         .text("Fahrgastzahlen" + " " + monthString)
-        // update bars2019
-       g
-        .selectAll("bar2019")
+    // update bars2019
+    g.selectAll("bar2019")
         .data(data2019)
         .enter()
         .append("rect")
-        /*
         .on("mouseover", function(d){
             tooltip
-              .style("left", d3.event.pageX - 50 + "px")
-              .style("top", d3.event.pageY - 70 + "px")
-              .style("display", "inline-block")
-              .html((d.date) + ".2019" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people));
-        })
-    	.on("mouseout", function(d){ tooltip.style("display", "none");})
-        
-       */
-        .on("mouseover", function(d){
-            tooltip
-              .style("left", d3.event.pageX - 50 + "px")
-              .style("top", d3.event.pageY - 70 + "px")
+              .style("left", d3.event.pageX - 70 + "px")
+              .style("top", d3.event.pageY - 95 + "px")
               .style("display", "inline-block")
               .html(function(e){
-                if(showBiweeklyData == true) {
-                    return "2019" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people);
+                if(showBiweeklyData) {
+                    return "2019" + "<br>" + "<br>" + "Fahrgäste: " + formater(d.transported_people);
                 } else {
-                    return (d.date) + ".2019" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people);
+                    return (d.date) + ".2019" + "<br>" + "<br>" + "Fahrgäste: " + formater(d.transported_people);
                 }
                 })
             })
     	.on("mouseout", function(d){ tooltip.style("display", "none");})
-        
         .attr("class", "bar")
         .attr("id", 'bar2019')
         .attr("y", height +350)
@@ -440,38 +410,25 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
         .attr("width", xScale.bandwidth() -5)
         .attr("height", function(d) { return (height - yScale(d.transported_people)) + 350; });
     
-        // update bars2020
-        g
-        .selectAll("bar2020")
+    // update bars2020
+    g.selectAll("bar2020")
         .data(data2020)
         .enter()
         .append("rect")
-        /*
         .on("mouseover", function(d){
             tooltip
-              .style("left", d3.event.pageX - 50 + "px")
-              .style("top", d3.event.pageY - 70 + "px")
-              .style("display", "inline-block")
-              .html((d.date) + ".2020" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people));
-        })
-    	.on("mouseout", function(d){ tooltip.style("display", "none");})
-        */
-        .on("mouseover", function(d){
-            tooltip
-              .style("left", d3.event.pageX - 50 + "px")
-              .style("top", d3.event.pageY - 70 + "px")
+              .style("left", d3.event.pageX - 70 + "px")
+              .style("top", d3.event.pageY - 95 + "px")
               .style("display", "inline-block")
               .html(function(e){
                 if(showBiweeklyData) {
-                    console.log(showBiweeklyData)
-                    return "2020" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people);
+                    return "2020" + "<br>" + "<br>" + "Fahrgäste: " + formater(d.transported_people);
                 } else {
-                    return (d.date) + ".2020" + "<br>" + "<br>" + "Fahrgäste: " + (d.transported_people);
+                    return (d.date) + ".2020" + "<br>" + "<br>" + "Fahrgäste: " + formater(d.transported_people);
                 }
                 })
             })
     	.on("mouseout", function(d){ tooltip.style("display", "none");})
-        
         .attr("class", "bar")
         .attr("id", 'bar2020')
         .attr("y", height +350)
@@ -484,14 +441,14 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
         .attr("width", xScale.bandwidth() -5)
         .attr("height", function(d) { return (height - yScale(d.transported_people)) + 350; });
 
-        //add textfield
-         g.selectAll("g")
-         .data(massnahmen)
-         .enter()
-         .append("rect")
-         .attr("class", "textBox")
-         .attr("x", function(d) { 
-             if (dateFromCsv.includes(d.date)) {
+    //add textfield
+    g.selectAll("g")
+        .data(massnahmen)
+        .enter()
+        .append("rect")
+        .attr("class", "textBox")
+        .attr("x", function(d) { 
+            if (dateFromCsv.includes(d.date)) {
                 switch(d.date){
                     case "25.02":
                         return xScale(d.date) -150;
@@ -506,7 +463,7 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
                         return xScale(d.date) -315;
                         break;
                     case "16.03":
-                        return xScale(d.date) - 75;
+                        return xScale(d.date) - 78;
                         break;
                     case "20.03":
                         return xScale(d.date) -5;
@@ -549,13 +506,14 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
                 }
             } else {
                 return 0;
-            }})
+            }
+        })
          .attr("y", 900)
          .transition()
          .duration(500)
          .attr("y", 550)
          .attr("width", function(d) { 
-            switch(d.date){
+                switch(d.date){
                     case "25.02":
                         return 200;
                         break;
@@ -569,10 +527,10 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
                         return 365;
                         break;
                     case "16.03":
-                        return 241;
+                        return 246;
                         break;
                     case "20.03":
-                        return 370;
+                        return 400;
                         break;
                     case "27.04":
                         return 495;
@@ -609,7 +567,8 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
                         break;
                     default:
                         return 200; 
-                    }})
+                    }
+        })
          .attr("height", function(d) {
             if (dateFromCsv.includes(d.date)) {
                 switch(d.row){
@@ -638,6 +597,7 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
             }})
          .style('fill', "#ffffd9")
          .attr('stroke', '#100f');
+
         //add arrow pointing to date
          g.selectAll("g")
             .data(massnahmen)
@@ -683,7 +643,7 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
             .attr("y1", 550)
             .attr("y2", 550)
             .style('stroke', '#ffffd9')
-            .style( 'stroke-width', '2px');
+            .style( 'stroke-width', '3px');
             
         //add textMassnahmen
         var textMassnahmen =  g.selectAll("g")
@@ -708,10 +668,10 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
                         return xScale(d.date) -120; 
                         break;
                     case "13.03":
-                        return xScale(d.date) -305;
+                        return xScale(d.date) -312;
                         break;
                     case "16.03":
-                        return xScale(d.date) - 65;
+                        return xScale(d.date) - 75;
                         break;
                     case "20.03":
                         return xScale(d.date) + 5;
@@ -781,13 +741,13 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
             .attr("dy", ".35em")
             .style("font-size", function(d){
                  if (d.date == 5.03) {
-                    return "1.3rem";
+                    return "1.6rem";
                 } if (d.date == 13.03) {
-                    return "1.3rem";
+                    return "1.55rem";
                 } if (d.date == 16.03) {
-                    return "1.3rem";
+                    return "1.5rem";
                 } if (d.date == 20.03) {
-                    return "1.3rem";
+                    return "1.6rem";
                 }else {
                 return "1.7rem";
                 }
@@ -801,15 +761,15 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
         
     })
 
-    }
+}
 update(january2019,january2020, "Januar", false);
 
 
 function updateYear(month2019, month2020, monthString, showBiweeklyData) {
-    
-    
+    //draw barchart
     update(month2019,month2020, monthString, showBiweeklyData);
   
+    //update bar chart
     d3.csv(month2019, function(data2019) {  
 
     //remove x axis ticks
@@ -840,10 +800,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
         g.selectAll("polygon")
             .remove();
 
-    //add text with month
-    var label = ["Januar", "Februar", "März", "April", "Mai",
-                "Juni", "Juli", "August", "September", "Oktober", 
-                "November", "Dezember"]
 
   g.selectAll("g")
             .data(data2019)
@@ -854,7 +810,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 40)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-weight", 100)
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -871,7 +826,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 155)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -888,7 +842,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 280)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -905,7 +858,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 395)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -922,7 +874,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 515)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -939,7 +890,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 625)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -956,7 +906,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 745)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -973,7 +922,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 845)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -990,7 +938,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 950)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -1007,7 +954,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 1075)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -1024,7 +970,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 1180)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -1041,7 +986,6 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .attr("x", 1300)
             .attr("y", 515)
             .attr("dy", ".35em")
-            //.style("font-size", "30px")
             .style("font-size", "1.5rem")
             .style("opacity", 0)
             .transition()
@@ -1065,6 +1009,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
          .attr("height", 40)
          .style('fill', "#ffffd9")
          .attr('stroke', '#100f');
+
     //add text
     g.selectAll("g")
         .data(data2019)
@@ -1081,14 +1026,11 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
         .attr("dy", ".35em")
         .style("font-size", "1.7rem")
         .text("Ein Balken repräsentiert die Summe der Daten eines halben Monats (ca 2 Wochen)");
-  
-    //change tooltip
-    
     });
     
 }
 
-//add legend
+//add legend on top of bar chart
 var VALUES = ["month2019", "month2020"]
 
 var legend = barChart.selectAll(".legend")
@@ -1153,14 +1095,14 @@ var legend = barChart.selectAll(".legend")
         heatmap2019.forEach(function(d) {
           return {
             day: +d.day,
-            hour: +d.hour,
+            month: +d.month,
             value: +d.value
           };
         })
           heatmap2020.forEach(function(d) {
           return {
             day: +d.day,
-            hour: +d.hour,
+            month: +d.month,
             value: +d.value
           };
         })
@@ -1208,7 +1150,7 @@ var legend = barChart.selectAll(".legend")
                 .attr("y", function (d, i) { return (i * gridSize) + 5; })
                 .style("text-anchor", "end")
                 .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
-                .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); })
+                .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-week" : "dayLabel mono axis"); })
                 .style("fill", "#000");
 
           var monthLabels = svg.selectAll(".monthLabel2019")
@@ -1220,7 +1162,7 @@ var legend = barChart.selectAll(".legend")
                 .attr("y", 0)
                 .style("text-anchor", "middle")
                 .attr("transform", "translate(" + gridSize / 2 + ", -6)")
-                .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); })
+                .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-month" : "timeLabel mono axis"); })
                 .style("fill", "#000");
 
           var heatMap = svg.selectAll(".month2019")
@@ -1239,7 +1181,7 @@ var legend = barChart.selectAll(".legend")
           heatMap.transition().duration(1000)
               .style("fill", function(d) { return colorScale(d.value); });
 
-          heatMap.append("title").text(function(d) { return "Bevörderte Personen: " + d.value; });
+          heatMap.append("title").text(function(d) { return "Bevörderte Personen: " + formater(d.value); });
 
           //draw heatmap 2020
           var dayLabels = svg.selectAll(".dayLabel2020")
@@ -1251,7 +1193,7 @@ var legend = barChart.selectAll(".legend")
                 .attr("y", function (d, i) { return (i * gridSize) + 5; })
                 .style("text-anchor", "end")
                 .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
-                .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); })
+                .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-week" : "dayLabel mono axis"); })
                 .style("fill", "#000");
 
           var monthLabels = svg.selectAll(".monthLabel2020")
@@ -1263,7 +1205,7 @@ var legend = barChart.selectAll(".legend")
                 .attr("y", 0)
                 .style("text-anchor", "middle")
                 .attr("transform", "translate(" + gridSize / 2 + ", -6)")
-                .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); })
+                .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-month" : "timeLabel mono axis"); })
                 .style("fill", "#000");
 
           var heatMap = svg.selectAll(".month2020")
@@ -1281,7 +1223,7 @@ var legend = barChart.selectAll(".legend")
           heatMap.transition().duration(1000)
               .style("fill", function(d) { return colorScale(d.value); });
 
-          heatMap.append("title").text(function(d) { return "Bevörderte Personen: " + d.value; });
+          heatMap.append("title").text(function(d) { return "Bevörderte Personen: " + formater(d.value); });
 
           //draw legend
           var legend = svg.selectAll(".legend")
@@ -1316,7 +1258,7 @@ var legend = barChart.selectAll(".legend")
             <h1 class="card-year">2020</h1>
             <p>14. Januar:</p>
             <p>110'648 Personen</p>
-            <img src="./img/increase.svg" class="card-icon" alt="increasing graph" style="width: 10rem; margin-top: 6rem;">
+            <img src="./img/increase.svg" class="card-icon" id="icon-increase" alt="increasing graph">
         </div>
     </div>
     <div class="card">
@@ -1329,7 +1271,7 @@ var legend = barChart.selectAll(".legend")
             <h1 class="card-year">2020</h1>
             <p>10. April:</p>
             <p>2'796 Personen</p>
-            <img src="./img/decrease.svg" class="card-icon" alt="decreasing graph" style="width: 10rem; margin-top: 6rem;">
+            <img src="./img/decrease.svg" class="card-icon" id="icon-decrease" alt="decreasing graph">
         </div>
     </div>
     <div class="card">
@@ -1340,7 +1282,7 @@ var legend = barChart.selectAll(".legend")
 
             <h1 class="card-year">2020</h1>
             <p>50'957 Fahrgäste pro Tag</p>
-            <img src="./img/group.svg" class="card-icon" alt="decreasing graph" style="width: 15rem; margin-top: 10rem;">
+            <img src="./img/group.svg" class="card-icon" id="icon-average" alt="small group of people">
         </div>
     </div>
     <div class="card">
@@ -1352,7 +1294,7 @@ var legend = barChart.selectAll(".legend")
             <h1 class="card-year">2020</h1>
             <p>18'650'133 Personen</p>
             <p>(-53.6%)</p>
-            <img src="./img/population.svg" class="card-icon" alt="decreasing graph" style="width: 15rem; margin-top: 4rem;">
+            <img src="./img/population.svg" class="card-icon" id="icon-total" alt="big crowd">
         </div>
     </div>
 </div>
