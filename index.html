@@ -88,18 +88,22 @@
 
 <!-- Tram chart-->
 <div class="tram-chart-container">
-    <h1 id="tram-chart-title"> Im Pandemiejahr 2020 wurden im Vergleich zum Vorjahr X% weniger Fahrten gemacht</h1>
-    <svg id="tram-chart" width="80%" height="20%"></svg>
+    <h1 id="tram-chart-title"> Im Pandemiejahr 2020 wurden im Vergleich zum Vorjahr 83'948 weniger Fahrten gemacht</h1>
+    <svg id="tram-chart" width="600px" height="300px"></svg>
 </div>
 
 <script>
 var tramChart = d3.select("#tram-chart").call(responsivefy);
-var xPos2019 = 180,
-    xPos2020 = 180,
-    yPos = 53;
+var tripCount2019 = 1768586,
+    tripCount2020 = 1684638,
+    xPos2019 = 105,
+    xPos2020 = 105,
+    yPos = 53,
+    height = 90,
+    width = 90;
     
-    var wagonAmount2019 = 7,
-        wagonAmount2020 = 5; 
+var wagonAmount2019 = 9,
+    wagonAmount2020 = 9; 
 //add year text
 tramChart
     .append("text")
@@ -108,7 +112,7 @@ tramChart
     .attr("x", 60)
     .attr("text-anchor", "start")
     .attr("fill", "#000")
-    .style("font-size", "2rem")
+    .style("font-size", "2.2rem")
     .text("2019");
 
 tramChart
@@ -118,35 +122,35 @@ tramChart
     .attr("x", 60)
     .attr("text-anchor", "start")
     .attr("fill", "#000")
-    .style("font-size", "2rem")
+    .style("font-size", "2.2rem")
     .text("2020");
 //add last wagon of 2019
 tramChart
   .append("svg:image")
   .attr("xlink:href", "./img/tram-wagon.svg")
   .attr("class", "lastWagon2019")
-  .attr("width", 150)
-  .attr("height", 150)
+  .attr("width", width)
+  .attr("height", height)
   .attr("x", yPos -25)
-  .attr("y",yPos);
+  .attr("y",yPos + 30);
 
 //define for calculation later
-var percentageCutOff = 10,
-//take wagon width / 100 * the percentage amount + const to lineup with other wagon2019 
-scaleLeft = ((150/100) * percentageCutOff) + 20;
+var percentageCutOff = 47,
+//take wagon height / 100 * the percentage amount + const to lineup with other wagon
+scaleLeft = ((height/100) * percentageCutOff) + 20;
 
 //add last wagon of 2020
 tramChart
   .append("svg:image")
   .attr("xlink:href", "./img/tram-wagon.svg")
   .attr("id", "lastWagon2020")
-  .attr("width", 150)
-  .attr("height", 150)
+  .attr("width", width)
+  .attr("height", height)
   .attr("x", yPos - scaleLeft)
-  .attr("y",yPos + 180);
+  .attr("y",yPos + 210);
 //define x position of the wagons2020 and cut off percentage
   var xPosLastWagon2020 = parseInt(d3.select("#lastWagon2020").attr("x"));
-  var xPosNewWagon2020 = xPosLastWagon2020 + 152;
+  var xPosNewWagon2020 = xPosLastWagon2020 + 77;
   var restPercentage = document.querySelector('#lastWagon2020');
     restPercentage.style.setProperty('--percentage', percentageCutOff + '%');
 
@@ -155,12 +159,12 @@ function addWagon2019() {
     .append("svg:image")
     .attr("xlink:href", "./img/tram-wagon.svg")
     .attr("id", "wagon")
-    .attr("width", 150)
-    .attr("height", 150)
-    .attr("x", xPos2019)
-    .attr("y",yPos);
+    .attr("width", width)
+    .attr("height", height)
+    .attr("x", xPos2019 + 15)
+    .attr("y",yPos + 30);
 
-    xPos2019 = xPos2019 + 152;
+    xPos2019 = xPos2019 + 92;
 }
 
 function addWagon2020() {
@@ -168,41 +172,79 @@ function addWagon2020() {
     .append("svg:image")
     .attr("xlink:href", "./img/tram-wagon.svg")
     .attr("id", "wagon")
-    .attr("width", 150)
-    .attr("height", 150)
-    .attr("x", xPosNewWagon2020)
-    .attr("y",yPos + 180);
+    .attr("width", width)
+    .attr("height", height)
+    .attr("x", xPosNewWagon2020 + 15)
+    .attr("y",yPos + 210);
 
-    xPosNewWagon2020 = xPosNewWagon2020 + 152;
+    xPosNewWagon2020 = xPosNewWagon2020 + 92;
 }
 
-for (i = 0; i < wagonAmount2019; i++) {
+for (i = 1; i < wagonAmount2019; i++) {
     addWagon2019();
-    i++;
 }
 
-for (i = 0; i < wagonAmount2020; i++) {
+for (i = 1; i < wagonAmount2020; i++) {
     addWagon2020();
-    i++;
 }
 //draw tram head
 tramChart
   .append("svg:image")
   .attr("xlink:href", "./img/tram-head.svg")
   .attr("id", "head")
-  .attr("width", 190)
-  .attr("height", 190)
-  .attr("x", xPos2019 - 7)//+ 145)
-  .attr("y",yPos -13);
+  .attr("width", 120)
+  .attr("height", 120)
+  .attr("x", xPos2019 + 11)//+ 145)
+  .attr("y",yPos + 18);
 
 tramChart
   .append("svg:image")
   .attr("xlink:href", "./img/tram-head.svg")
   .attr("id", "head")
-  .attr("width", 190)
-  .attr("height", 190)
-  .attr("x", xPosNewWagon2020 - 7)//+ 145)
-  .attr("y",yPos + 167)//190);
+  .attr("width", 120)
+  .attr("height", 120)
+  .attr("x", xPosNewWagon2020 + 11)//+ 145)
+  .attr("y",yPos + 198)//190);
+
+//add information box
+tramChart
+         .append("rect")
+         .attr("class", "textBox")
+         .attr("x", 1000)
+         .attr("y", 279)
+         .attr("width", 470)
+         .attr("height", 60)
+         .style('fill', "#ffffd9")
+         .attr('stroke', '#100f');
+tramChart
+         .append("rect")
+         .attr("class", "textBox")
+         .attr("x", 1000)
+         .attr("y", 98)
+         .attr("width", 470)
+         .attr("height", 60)
+         .style('fill', "#ffffd9")
+         .attr('stroke', '#100f');
+
+tramChart
+    .append("text")
+    .attr("id", "year-number")
+    .attr("y", 145)
+    .attr("x", 1020)
+    .attr("text-anchor", "start")
+    .attr("fill", "#000")
+    .style("font-size", "3rem")
+    .text("100% - 1'768'586 Fahrten");
+
+tramChart
+    .append("text")
+    .attr("id", "year-number")
+    .attr("y", 325)
+    .attr("x", 1020)
+    .attr("text-anchor", "start")
+    .attr("fill", "#000")
+    .style("font-size", "3rem")
+    .text("95,3% - 1'684'638 Fahrten");
   
   </script>
 
@@ -610,7 +652,7 @@ function update(month2019, month2020, monthString, showBiweeklyData) {
              if (dateFromCsv.includes(d.date)) {
                 return ((xScale(d.date) - 5) + ', ' + 550 + ', '   //left point
                         + (xScale(d.date) + 35) +', ' + 550+ ', '   //right point
-                        + (xScale(d.date) + 15) + ', ' + 520);      //top point 
+                        + (xScale(d.date) + 15) + ', ' + 525);      //top point 
             } else {
                 return 0 + ', ' + 0 + ', ' + 0 + ', ' + 0 + ', ' + 0 + ', ' + 0;
             }})
@@ -784,24 +826,24 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
     g.selectAll("text")
             .remove();
 
-        //delete textbox
-        g.selectAll(".textBox")
-            .transition()
-            .duration(500)
-            .attr("y", 800)
-            .attr("height", 0)
-            .remove();
+    //delete textbox
+    g.selectAll(".textBox")
+        .transition()
+        .duration(500)
+        .attr("y", 800)
+        .attr("height", 0)
+        .remove();
 
-        //delete old line from box to point
-        g.selectAll("line")
-            .remove();
+    //delete old line from box to point
+    g.selectAll("line")
+        .remove();
         
-        //delete polygon
-        g.selectAll("polygon")
-            .remove();
+    //delete polygon
+    g.selectAll("polygon")
+        .remove();
 
 
-  g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -817,7 +859,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("Januar"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -833,7 +875,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("Februar"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -849,7 +891,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("März"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -865,7 +907,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("April"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -881,7 +923,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("Mai"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -897,7 +939,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("Juni"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -913,7 +955,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("Juli"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -929,7 +971,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("August"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -945,7 +987,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("September"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -961,7 +1003,7 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("Oktober"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
@@ -977,13 +1019,13 @@ function updateYear(month2019, month2020, monthString, showBiweeklyData) {
             .style("opacity", 1)
             .text("November"); 
 
-            g.selectAll("g")
+        g.selectAll("g")
             .data(data2019)
             .enter()
             .append("text")
             .attr("class", "text")
             .attr("id", "monthLabel")
-            .attr("x", 1300)
+            .attr("x", 1290)
             .attr("y", 515)
             .attr("dy", ".35em")
             .style("font-size", "1.5rem")
@@ -1301,22 +1343,25 @@ var legend = barChart.selectAll(".legend")
 
 <!-- Footer -->
 <div id="footer" class="footer">
+    <div class="footer-info">
+        <p>Diese Visualisierung entstand 2021 im Rahmen der Open Data-Veranstaltung an der Universität Bern</p>
+    </div>
+
     <div class="copyright">
-      <p>Copyright 2021 Michael Dür
-        <a id="mail-address" href="mailto:michael.duer@bluewin.ch">michael.duer@bluewin.ch <i class="fas fa-envelope"></i></a> 
+      <p>Copyright 2021
+        <a id="mail-address" href="mailto:michael.duer@bluewin.ch">Michael Dür<i class="fas fa-envelope" style="margin-left: 5px;"></i></a> <br>
+        Lizenziert unter der GNU General Public License v3
       </p>
     </div>
-    <div>
-        <p>Diese Visualisierung entstand 2021 im Rahmen der Open Data-Veranstaltung an der Universität Bern. </p>
-    </div>
-    <div class="credits"> <p>Tram Icons erstellt von</p>
-        <a href="https://www.freepik.com" title="Freepik">Freepik</a> und
-        <a href="https://www.flaticon.com/de/autoren/icongeek26" title="Icongeek26">Icongeek26</a> <br>
-        <p>Sonstige Icons</p>
-        <a href="https://www.flaticon.com/authors/photo3idea-studio" title="photo3idea_studio">photo3idea_studio</a>
-        <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a>
-        <a href="https://www.freepik.com" title="Freepik">Freepik</a> <br>
-        from <a href="https://www.flaticon.com/de/" title="Flaticon">www.flaticon.com</a>
+    <p>Link zu meinem Github <a href="https://github.com/michael-duer/open-data-project" title="Github Repository" target="_blank">Repository <i class="fab fa-github"></i></a></p> <br>    
+    <div class="credits"> <p>Icons erstellt von:</p>
+        <a href="https://www.freepik.com" title="Freepik" target="_blank">Freepik</a>,
+        <a href="https://www.flaticon.com/de/autoren/icongeek26" title="Icongeek26" target="_blank">Icongeek26</a>,
+        <a href="https://www.flaticon.com/authors/photo3idea-studio" title="photo3idea_studio" target="_blank">photo3idea_studio</a>,
+        <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons" target="_blank">Smashicons</a> und
+        <a href="https://www.freepik.com" title="Freepik" target="_blank">Freepik</a> <br>
+        von <a href="https://www.flaticon.com/de/" title="Flaticon" target="_blank"> Flaticon </a>
+        und <a href="https://fontawesome.com/" title="Fontawesome" target="_blank"> Fontawesome</a>
     </div>
     <div>
         <p>Bildquelle: BERNMOBIL</p>
